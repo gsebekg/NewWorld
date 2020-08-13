@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -16,6 +19,9 @@ namespace NewWorld.Models
             // Dodaj tutaj niestandardowe oświadczenia użytkownika
             return userIdentity;
         }
+        public string Test { get; set; }
+        public virtual ICollection<Game> Games { get; set; }
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -24,6 +30,7 @@ namespace NewWorld.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+        public DbSet<Game> Games { get; set; }
 
         public static ApplicationDbContext Create()
         {

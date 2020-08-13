@@ -93,7 +93,7 @@ namespace NewWorld.Controllers
 
         //
         // GET: /Account/VerifyCode
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
             // Wymagaj, aby użytkownik zalogował się już za pomocą nazwy użytkownika/hasła lub logowania zewnętrznego
@@ -134,7 +134,7 @@ namespace NewWorld.Controllers
             }
         }
 
-        //
+        //*/
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -151,7 +151,8 @@ namespace NewWorld.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Name, Email="test@wp.pl"};
+                
+                var user = new ApplicationUser { UserName = model.Name, Email= model.Name + "test@wp.pl"};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -174,7 +175,7 @@ namespace NewWorld.Controllers
 
         //
         // GET: /Account/ConfirmEmail
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
@@ -383,7 +384,7 @@ namespace NewWorld.Controllers
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
-        }
+        }*/
 
         //
         // POST: /Account/LogOff
@@ -397,11 +398,11 @@ namespace NewWorld.Controllers
 
         //
         // GET: /Account/ExternalLoginFailure
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
-        }
+        }*/
 
         protected override void Dispose(bool disposing)
         {
