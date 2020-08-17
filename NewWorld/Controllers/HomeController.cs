@@ -26,32 +26,40 @@ namespace NewWorld.Controllers
         {
             return View();
         }
+
         [Authorize]
-        public ActionResult GameList()
+        public ActionResult GameList()  //jeżeli wartość id==true to nazwa jest zajęta
         {
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            var gameList = db.Games.Where(a => a.Players.Select(c => c.Id).Contains(user.Id)).ToList();
-
-            HomeViewModels viewModels = new HomeViewModels { YourGames = gameList };
-
-
-            return View(viewModels);
+            return View(GetHomeViewModel());
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult GameList([Bind(Prefix = "NewGame")] Game game)
         {
+            game.Name = game.Name.Trim();
+            bool alreadyUsed = false;
             if (ModelState.IsValid)
             {
-                game.CreateDate = DateTime.Now;
-                game.IsBegan = false;
-                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-                game.Players = new List<ApplicationUser>{ user  };
-                db.Games.Add(game);
-                db.SaveChanges();
+                //sprawdzanie czy dana nazwa juz nie istnieje
+                if (db.Games.Where(a => a.Name.Equals(game.Name)).ToList().Count() > 0)
+                    alreadyUsed = true;
+                else
+                {
+                    game.CreateDate = DateTime.Now;
+                    game.IsBegan = false;
+                    ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+                    UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = 0, Player = user };
+                    game.Players = new List<ApplicationUser> { user };
+                    game.UserGameProperties = new List<UserGameProperty> { userGameProperty };
+                    db.Games.Add(game);
+                    db.SaveChanges();
+                }
             }
-            return RedirectToAction("GameList");
+            HomeViewModels viewModel = GetHomeViewModel();
+            viewModel.NameUsed = alreadyUsed;
+            return View(viewModel);
 
         }
 
@@ -64,6 +72,15 @@ namespace NewWorld.Controllers
                 db.Games.Remove(game);
             db.SaveChanges();
             return RedirectToAction("GameList");
+        }
+
+        //helpers
+        private HomeViewModels GetHomeViewModel()
+        {
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            var gameList = db.Games.Where(a => a.Players.Select(c => c.Id).Contains(user.Id)).ToList();
+            HomeViewModels viewModel = new HomeViewModels { YourGames = gameList };
+            return viewModel;
         }
     }
 }

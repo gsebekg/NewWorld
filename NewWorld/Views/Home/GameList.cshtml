@@ -3,29 +3,42 @@
     ViewBag.Title = "Lista Gier";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (Model.YourGames.Count == 0)
+{
+    <h2>Nie masz rozpoczętych gier</h2>
+}
+else
+{
 
-<h2>Lista Gier</h2>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.YourGames[0].Name)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model.YourGames)
-    {
+    <h2>Lista Gier</h2>
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Wycofaj się", "Delete", new { id = item.Id })
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.YourGames[0].Name)
+            </th>
+            <th>
+                Liczba graczy
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model.YourGames)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @item.NumberOfPlayers() <text> / </text> @item.MaxPlayers
+                </td>
+                <td>
+                    @Html.ActionLink("Wycofaj się", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
 
 
 
@@ -42,6 +55,19 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.NewGame.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.NewGame.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @if(Model.NameUsed.GetValueOrDefault())
+        {
+            <div class="text-danger">
+                Nazwa jest już zajęta
+            </div>
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewGame.MaxPlayers, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NewGame.MaxPlayers, new { htmlAttributes = new { @class = "form-control", min=2, max=4, step=1 } })
+                @Html.ValidationMessageFor(model => model.NewGame.MaxPlayers, "", new { @class = "text-danger" })
             </div>
         </div>
 

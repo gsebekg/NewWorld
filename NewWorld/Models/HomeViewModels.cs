@@ -9,6 +9,7 @@ namespace NewWorld.Models
     {
         public List<Game> YourGames { get; set; }
         public Game NewGame { get; set; }
+        public bool? NameUsed { get; set; }
 
     }
 }

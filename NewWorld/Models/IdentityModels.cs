@@ -21,6 +21,7 @@ namespace NewWorld.Models
         }
         public string Test { get; set; }
         public virtual ICollection<Game> Games { get; set; }
+        public virtual ICollection<UserGameProperty> UserGameProperties { get; set; }
 
     }
 
@@ -31,6 +32,7 @@ namespace NewWorld.Models
         {
         }
         public DbSet<Game> Games { get; set; }
+        public DbSet<UserGameProperty> UserGameProperties { get; set; }
 
         public static ApplicationDbContext Create()
         {

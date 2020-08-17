@@ -252,12 +252,25 @@
     <Compile Include="Migrations\202008131121399_games.Designer.cs">
       <DependentUpon>202008131121399_games.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008170953119_UserGameProperty.cs" />
+    <Compile Include="Migrations\202008170953119_UserGameProperty.Designer.cs">
+      <DependentUpon>202008170953119_UserGameProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008171025215_UserGameProperty2.cs" />
+    <Compile Include="Migrations\202008171025215_UserGameProperty2.Designer.cs">
+      <DependentUpon>202008171025215_UserGameProperty2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008171034498_UserGameProperty3.cs" />
+    <Compile Include="Migrations\202008171034498_UserGameProperty3.Designer.cs">
+      <DependentUpon>202008171034498_UserGameProperty3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\UserGameProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -356,6 +369,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008131121399_games.resx">
       <DependentUpon>202008131121399_games.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008170953119_UserGameProperty.resx">
+      <DependentUpon>202008170953119_UserGameProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008171025215_UserGameProperty2.resx">
+      <DependentUpon>202008171025215_UserGameProperty2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008171034498_UserGameProperty3.resx">
+      <DependentUpon>202008171034498_UserGameProperty3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
