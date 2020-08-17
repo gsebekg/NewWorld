@@ -8,6 +8,7 @@ namespace NewWorld.Models
     public class HomeViewModels
     {
         public List<Game> YourGames { get; set; }
+        public List<Game> OpenGames { get; set; }
         public Game NewGame { get; set; }
         public bool? NameUsed { get; set; }
 

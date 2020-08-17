@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,12 +21,19 @@ namespace NewWorld.Models
         [Display(Name = "Maksymalna liczba graczy")]
         [Range(2, 4, ErrorMessage = "Podaj wartość pomiędzy {1}, a {2}")]
         public int MaxPlayers { get; set; }
+        [Display(Name = "Hasło (opcjonalne)")]
+        [StringLength(25, ErrorMessage = "Maksymalna długośc hasła to {1}")]
+        public string Password { get; set; }
         public virtual ICollection<ApplicationUser> Players { get; set; }
         public virtual ICollection<UserGameProperty> UserGameProperties { get; set; }
 
         public int NumberOfPlayers()
         {
             return Players.Count;
+        }
+        public bool HavePassword()
+        {
+            return !Password.IsNullOrWhiteSpace();
         }
     }
 }
