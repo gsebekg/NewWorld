@@ -28,9 +28,11 @@ namespace NewWorld.Controllers
         }
 
         [Authorize]
-        public ActionResult GameList()  
+        public ActionResult GameList(bool? id)  //jeżeli id==true to masz juz maksymalna liczbę gier
         {
-            return View(GetHomeViewModel());
+            HomeViewModels viewModel = GetHomeViewModel();
+            viewModel.HaveMaxGames = id.GetValueOrDefault();
+            return View(viewModel);
         }
 
         [Authorize]
@@ -40,25 +42,33 @@ namespace NewWorld.Controllers
         {
             game.Name = game.Name.Trim();
             bool alreadyUsed = false;
+            bool haveMaxGames = false;
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
             if (ModelState.IsValid)
             {
-                //sprawdzanie czy dana nazwa juz nie istnieje
-                if (db.Games.Where(a => a.Name.Equals(game.Name)).ToList().Count() > 0)
-                    alreadyUsed = true;
-                else
+                //sprawdzanie czy gracz nie ma juz zaczętych maksymalnej liczby gier
+                if (user.UserGameProperties.Where(a => a.Active).Count() < 3)
                 {
-                    game.CreateDate = DateTime.Now;
-                    game.IsBegan = false;
-                    ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-                    UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = 0, Player = user };
-                    game.Players = new List<ApplicationUser> { user };
-                    game.UserGameProperties = new List<UserGameProperty> { userGameProperty };
-                    db.Games.Add(game);
-                    db.SaveChanges();
+                    //sprawdzanie czy dana nazwa juz nie istnieje
+                    if (db.Games.Where(a => a.Name.Equals(game.Name)).ToList().Count() > 0)
+                        alreadyUsed = true;
+                    else
+                    {
+                        game.CreateDate = DateTime.Now;
+                        game.IsBegan = false;
+                        UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = 0, Player = user };
+                        game.Players = new List<ApplicationUser> { user };
+                        game.UserGameProperties = new List<UserGameProperty> { userGameProperty };
+                        db.Games.Add(game);
+                        db.SaveChanges();
+                    }
                 }
+                else
+                    haveMaxGames = true;
             }
             HomeViewModels viewModel = GetHomeViewModel();
             viewModel.NameUsed = alreadyUsed;
+            viewModel.HaveMaxGames = haveMaxGames;
             return View(viewModel);
 
         }
@@ -68,7 +78,7 @@ namespace NewWorld.Controllers
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
             Game game = db.Games.Find(id);
             UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Player.Id == user.Id).Where(b => b.Game.Id == game.Id).FirstOrDefault();
-            if(game.IsBegan)
+            if (game.IsBegan)
                 return RedirectToAction("GameList");
             game.Players.Remove(user);
             db.UserGameProperties.Remove(userGameProperty);
@@ -83,6 +93,9 @@ namespace NewWorld.Controllers
         {
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
             Game game = db.Games.Find(id);
+            //sprawdzanie czy gracz nie ma juz zaczętych maksymalnej liczby gier
+            if (user.UserGameProperties.Where(a => a.Active).Count() >= 3)
+                return RedirectToAction("GameList", new { id = true });
             //jeżeli gra ma hasło wyswietl strone do wprowadzania hasła
             if (game.HavePassword())
             {
@@ -102,9 +115,12 @@ namespace NewWorld.Controllers
         public ActionResult Join([Bind(Include = "Id,Password")] JoinViewModel viewModel)
         {
             Game game = db.Games.Find(viewModel.Id);
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            //sprawdzanie czy gracz nie ma juz zaczętych maksymalnej liczby gier
+            if (user.UserGameProperties.Where(a => a.Active).Count() >= 3)
+                return RedirectToAction("GameList", new { id = true });
             if (ModelState.IsValid)
             {
-                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
                 if (game.Password != viewModel.Password)
                     return View(new JoinViewModel { Id = viewModel.Id, Name = game.Name, WrongPassword = true });
                 if (game.Players.Contains(user) || game.IsBegan)
@@ -113,24 +129,41 @@ namespace NewWorld.Controllers
                 db.SaveChanges();
                 return RedirectToAction("GameList");
             }
-            return View(new JoinViewModel { Id = viewModel.Id, Name = game.Name, WrongPassword=true });
-
-
-
-
+            return View(new JoinViewModel { Id = viewModel.Id, Name = game.Name, WrongPassword = true });
         }
-            //helpers
-            private HomeViewModels GetHomeViewModel()
+
+        [Authorize]
+        public ActionResult GiveUp(int id)
+        {
+            Game game = db.Games.Find(id);
+            return View(game);
+        }
+
+        [Authorize]
+        public ActionResult GiveUpConfirmed(int id)
+        {
+            Game game = db.Games.Find(id);
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Game.Id == game.Id).Where(b => b.Player.Id == user.Id).FirstOrDefault();
+            userGameProperty.Active = false;
+            db.SaveChanges();
+            
+            return RedirectToAction("GameList");
+        }
+
+
+        //helpers
+        private HomeViewModels GetHomeViewModel()
         {
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
             // pobieranie gier do których należy gracz
             var gameList = db.Games.Where(a => a.Players.Select(c => c.Id).Contains(user.Id)).ToList();
             //wybieranie tych w których jest aktywny
-            gameList.Where(a => a.UserGameProperties.Where(b => b.Player.Id == User.Identity.GetUserId()).Where(c => c.Active).ToList().Count() == 1).ToList();
+            gameList = gameList.Where(a => a.UserGameProperties.Where(b => b.Player.Id == User.Identity.GetUserId()).Where(c => c.Active).ToList().Count() == 1).ToList();
             var gameListIds = gameList.Select(a => a.Id).ToList();
             //pobieranie otwartych gier z wyjątkiem tych do których dołączył gracz
-            List<Game> otherGames = db.Games.Where(a => !a.IsBegan).Where(b=>!gameListIds.Contains(b.Id)).ToList();
-            HomeViewModels viewModel = new HomeViewModels { YourGames = gameList, OpenGames=otherGames };
+            List<Game> otherGames = db.Games.Where(a => !a.IsBegan).Where(b => !gameListIds.Contains(b.Id)).ToList();
+            HomeViewModels viewModel = new HomeViewModels { YourGames = gameList, OpenGames = otherGames };
             return viewModel;
         }
         //dodanie gracza do gry

@@ -11,6 +11,7 @@ namespace NewWorld.Models
         public List<Game> OpenGames { get; set; }
         public Game NewGame { get; set; }
         public bool? NameUsed { get; set; }
+        public bool? HaveMaxGames { get; set; }
 
     }
 

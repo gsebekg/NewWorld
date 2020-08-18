@@ -9,7 +9,12 @@
 }
 else
 {
-
+    if (Model.HaveMaxGames.GetValueOrDefault())
+    {
+        <div class="text-danger">
+            <h2>Masz juz maksymalną liczbę rozpoczętych gier!</h2>
+        </div>
+    }
     <h2>Lista Gier</h2>
     <table class="table">
         <tr>

@@ -1,0 +1,10 @@
+﻿@model NewWorld.Models.Game
+@{
+    ViewBag.Title = "Poddaj się";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Jesteś pewien, że chcesz poddać się w grze @Model.Name ?</h2>
+@Html.ActionLink("Poddaj się", "GiveUpConfirmed", new { id = Model.Id })<br />
+@Html.ActionLink("Anuluj", "GameList")
+
