@@ -32,7 +32,15 @@ else
                     @item.NumberOfPlayers() <text> / </text> @item.MaxPlayers
                 </td>
                 <td>
-                    @Html.ActionLink("Wycofaj się", "Delete", new { id = item.Id })
+                    @if (item.IsBegan)
+                    {
+                        @Html.ActionLink("Poddaj się", "GiveUp", new { id = item.Id }) <text> | </text>
+                        @Html.ActionLink("Wejdź do gry", "Map", "Game", new { id = item.Id }, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Wycofaj się", "Delete", new { id = item.Id })
+                    }
                 </td>
             </tr>
         }
@@ -64,6 +72,13 @@ else
             </div>
         }
         <div class="form-group">
+            @Html.LabelFor(model => model.NewGame.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NewGame.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NewGame.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
             @Html.LabelFor(model => model.NewGame.MaxPlayers, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.NewGame.MaxPlayers, new { htmlAttributes = new { @class = "form-control", min = 2, max = 4, step = 1 } })
@@ -73,7 +88,7 @@ else
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Utwórz" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -101,7 +116,7 @@ else
             <th></th>
         </tr>
 
-        @foreach (var item in Model.YourGames)
+        @foreach (var item in Model.OpenGames)
         {
             <tr>
                 <td>
@@ -111,7 +126,7 @@ else
                     @item.NumberOfPlayers() <text> / </text> @item.MaxPlayers
                 </td>
                 <td>
-                    @Html.DisplayFor(m => item.HavePassword())
+                    @((bool)item.HavePassword() ? "Tak" : "Nie")
                 </td>
                 <td>
                     @Html.ActionLink("Dołącz", "Join", new { id = item.Id })
