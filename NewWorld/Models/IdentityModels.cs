@@ -33,6 +33,8 @@ namespace NewWorld.Models
         }
         public DbSet<Game> Games { get; set; }
         public DbSet<UserGameProperty> UserGameProperties { get; set; }
+        public DbSet<Island> Islands { get; set; }
+        public DbSet<Resources> Resources { get; set; }
 
         public static ApplicationDbContext Create()
         {

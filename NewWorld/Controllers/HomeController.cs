@@ -166,14 +166,43 @@ namespace NewWorld.Controllers
             HomeViewModels viewModel = new HomeViewModels { YourGames = gameList, OpenGames = otherGames };
             return viewModel;
         }
-        //dodanie gracza do gry
+        //dodanie gracza do gry, jeżeli gra jest pełna to wystartuj
         private void AddUserToGame(ApplicationUser user, Game game)
         {
             game.Players.Add(user);
             UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = (Color)(game.NumberOfPlayers() - 1), Player = user };
             game.UserGameProperties.Add(userGameProperty);
             if (game.NumberOfPlayers() == game.MaxPlayers)
+            {
                 game.IsBegan = true;
+                db.SaveChanges();
+                Random rand = new Random();
+                List<UserGameProperty> properties = db.UserGameProperties.Where(a => a.Game.Id == game.Id).ToList();
+                List<Island> islands = new List<Island>(); 
+                for (int i=0;i<game.MaxPlayers;i++)
+                {
+                    //losujemy współrzędne tak by wyspa nie znajdowała sie za blisko innej
+                    int x, y;
+                    int wielkoscMapy = game.MaxPlayers * 5 - 1;
+                    bool positionOk;
+                    do
+                    {
+                        positionOk = true;
+                        x = rand.Next(0, wielkoscMapy);
+                        y = rand.Next(0, wielkoscMapy);
+                        foreach (Island item in islands)
+                        {
+                            if (Island.Distance(x, item.X, y, item.Y) < 2)
+                            {
+                                positionOk = false;
+                                break;
+                            }
+                        }
+                    }
+                    while (!positionOk);
+                    Island island = new Island { Name="Wyspa "+properties[i].Player.UserName, Place=250, X=x,Y=y, Resources  }
+                }
+            }
         }
     }
 }

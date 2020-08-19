@@ -15,6 +15,7 @@ namespace NewWorld.Models
         public bool Active { get; set; }
         public virtual Game Game { get; set; }
         public virtual ApplicationUser Player { get; set; }
+        public virtual ICollection<Island> Islands { get; set; }
     }
 
     public enum Color
