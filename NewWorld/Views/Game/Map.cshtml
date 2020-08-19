@@ -1,0 +1,23 @@
+﻿@model NewWorld.Models.MapViewModel
+@{
+    ViewBag.Title = "Map";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Mapa</h2>
+
+
+<table style="background-color:aquamarine">
+    @for (int i = 0; i < Model.Game.MaxPlayers * 5; i++)
+    {
+        <tr>
+            @for (int j = 0; j < Model.Game.MaxPlayers * 5; j++)
+            {
+                <td style="width: 50px; height: 50px; border: 1px solid black">
+                    o
+                </td>
+            }
+        </tr>
+    }
+</table>
+
