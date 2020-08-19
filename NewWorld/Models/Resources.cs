@@ -43,5 +43,50 @@ namespace NewWorld.Models
         public double Papryka { get; set; }
         public double Gulasz { get; set; }
 
+
+
+        public void ZeroResources()
+        {
+            Deski = 0;
+            Cegly = 0;
+            Zagle = 0;
+            StaloweBelki = 0;
+            Okna = 0;
+            Ryby = 0;
+            Sznaps = 0;
+            Ubrania = 0;
+            Kiełbasa = 0;
+            Chleb = 0;
+            Mydlo = 0;
+            Piwo = 0;
+            Konserwy = 0;
+            MaszynyDoSzycia = 0;
+            Drewno = 0;
+            Ziemniaki = 0;
+            Welna = 0;
+            Glinianka = 0;
+            Swinie = 0;
+            Zboze = 0;
+            Maka = 0;
+            Zelazo = 0;
+            Wegiel = 0;
+            Stal = 0;
+            Loj = 0;
+            Chmiel = 0;
+            Slod = 0;
+            Piasek = 0;
+            Szklo = 0;
+            Wolowina = 0;
+            Papryka = 0;
+            Gulasz = 0;
+
+        }
+        public void InitialResources()
+        {
+            this.ZeroResources();
+            Deski = 50;
+            Ryby = 10;
+        }
     }
+
 }

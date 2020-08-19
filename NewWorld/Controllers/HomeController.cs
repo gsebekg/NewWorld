@@ -56,7 +56,7 @@ namespace NewWorld.Controllers
                     {
                         game.CreateDate = DateTime.Now;
                         game.IsBegan = false;
-                        UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = 0, Player = user };
+                        UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = 0, Player = user, Coins=50000 };
                         game.Players = new List<ApplicationUser> { user };
                         game.UserGameProperties = new List<UserGameProperty> { userGameProperty };
                         db.Games.Add(game);
@@ -145,6 +145,13 @@ namespace NewWorld.Controllers
             Game game = db.Games.Find(id);
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
             UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Game.Id == game.Id).Where(b => b.Player.Id == user.Id).FirstOrDefault();
+            List<Island> islands = db.Islands.Where(a => a.Property.Id == userGameProperty.Id).ToList();
+            foreach (Island island in islands)
+            {
+                island.Resources.ZeroResources();
+                island.Property = null;
+            }
+
             userGameProperty.Active = false;
             db.SaveChanges();
             
@@ -170,7 +177,7 @@ namespace NewWorld.Controllers
         private void AddUserToGame(ApplicationUser user, Game game)
         {
             game.Players.Add(user);
-            UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = (Color)(game.NumberOfPlayers() - 1), Player = user };
+            UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = (Color)(game.NumberOfPlayers() - 1), Player = user, Coins=50000 };
             game.UserGameProperties.Add(userGameProperty);
             if (game.NumberOfPlayers() == game.MaxPlayers)
             {
@@ -178,13 +185,14 @@ namespace NewWorld.Controllers
                 db.SaveChanges();
                 Random rand = new Random();
                 List<UserGameProperty> properties = db.UserGameProperties.Where(a => a.Game.Id == game.Id).ToList();
-                List<Island> islands = new List<Island>(); 
+                List<Island> islands = new List<Island>();
+                int x, y;
+                int wielkoscMapy = game.MaxPlayers * 5;
+                bool positionOk;
+                //losowanie wysp graczy
                 for (int i=0;i<game.MaxPlayers;i++)
                 {
                     //losujemy współrzędne tak by wyspa nie znajdowała sie za blisko innej
-                    int x, y;
-                    int wielkoscMapy = game.MaxPlayers * 5 - 1;
-                    bool positionOk;
                     do
                     {
                         positionOk = true;
@@ -200,9 +208,70 @@ namespace NewWorld.Controllers
                         }
                     }
                     while (!positionOk);
-                    Island island = new Island { Name="Wyspa "+properties[i].Player.UserName, Place=250, X=x,Y=y, Resources  }
+                    Resources resources = new Resources();
+                    resources.InitialResources();
+                    Island island = new Island
+                    {
+                        Name = "Wyspa " + properties[i].Player.UserName,
+                        Place = 250,
+                        X = x,
+                        Y = y,
+                        Resources = resources,
+                        Ziemniaki = true,
+                        Chmiel = true,
+                        Zboze = false,
+                        Papryka = false,
+                        Glinianka = 2,
+                        Zelazo = 2,
+                        Property = properties[i]
+                    };
+                    islands.Add(island);
                 }
+                //losowanie pustych wysp
+                for(int i=0; i<game.MaxPlayers*4;i++)
+                {
+                    do
+                    {
+                        positionOk = true;
+                        x = rand.Next(0, wielkoscMapy);
+                        y = rand.Next(0, wielkoscMapy);
+                        foreach (Island item in islands)
+                        {
+                            if (Island.Distance(x, item.X, y, item.Y) < 2)
+                            {
+                                positionOk = false;
+                                break;
+                            }
+                        }
+                    }
+                    while (!positionOk);
+                    Resources resources = new Resources();
+                    resources.ZeroResources();
+                    int glinianka = rand.Next(-1, 4);
+                    glinianka = (glinianka == -1) ? 0 : glinianka;
+                    int zelazo = rand.Next(-1, 4);
+                    zelazo = (zelazo == -1) ? 0 : zelazo;
+                    Island island = new Island
+                    {
+                        Name = "Wyspa " + (i+1),
+                        Place = rand.Next(150,301),
+                        X = x,
+                        Y = y,
+                        Resources = resources,
+                        Ziemniaki = rand.Next(1,9)<=3,
+                        Chmiel = rand.Next(1, 9) <= 3,
+                        Zboze = rand.Next(1, 9) <= 5,
+                        Papryka = rand.Next(1, 9) <= 5,
+                        Glinianka = glinianka,
+                        Zelazo = zelazo,
+                        Property = null
+                    };
+                    islands.Add(island);
+                }
+                db.Islands.AddRange(islands);
+                db.SaveChanges();
             }
+
         }
     }
 }

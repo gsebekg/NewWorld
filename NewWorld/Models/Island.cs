@@ -14,6 +14,12 @@ namespace NewWorld.Models
         public int Place { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int Glinianka { get; set; }
+        public int Zelazo { get; set; }
+        public bool Ziemniaki { get; set; }
+        public bool Zboze { get; set; }
+        public bool Chmiel { get; set; }
+        public bool Papryka { get; set; }
 
         public virtual UserGameProperty Property { get; set; }
         public virtual Resources Resources { get; set; }
