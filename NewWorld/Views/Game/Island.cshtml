@@ -1,0 +1,42 @@
+﻿@model NewWorld.Models.IslandViewModel
+@{
+    ViewBag.Title = Model.Island.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="background-color:bisque; border-color:bisque; min-height:35px; position:fixed; right:0; left:0; padding:5px">
+    <div style="padding-left:40px; font-size:17px">
+        <img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /> @Model.Coins
+        @if (Model.YourIsland)
+        {
+            <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px; padding-left:5px" />  @Math.Floor(Model.Resources.Deski) 
+            <img src="@Url.Content("~/Images/cegly.png")" style="width: 25px; height: 25px; padding-left:5px" />  @Math.Floor(Model.Resources.Cegly) 
+        }
+    </div>
+</div>
+<div style="margin-top:50px
+@if(!Model.EmptyIsland)
+{
+    <text>; color:</text>
+    switch(Model.Property.Color)
+                    {
+                        case NewWorld.Models.Color.green:
+                            <text> green </text>
+                            break;
+                        case NewWorld.Models.Color.purple:
+                            <text> purple </text>
+                            break;
+                        case NewWorld.Models.Color.red:
+                            <text> red </text>
+                            break;
+                        case NewWorld.Models.Color.yellow:
+                            <text>yellow</text>
+                            break;
+                    }
+}
+
+
+">
+    <h2>@Model.Island.Name</h2>
+</div>
+
+

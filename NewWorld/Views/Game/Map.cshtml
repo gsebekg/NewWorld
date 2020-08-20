@@ -1,23 +1,90 @@
 ﻿@model NewWorld.Models.MapViewModel
 @{
-    ViewBag.Title = "Map";
+    ViewBag.Title = "Mapa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div style="background-color:bisque; border-color:bisque; min-height:35px; position:fixed; right:0; left:0; padding:5px">
+    <div style="padding-left:40px; font-size:17px">
+        <img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /> @Model.Property.Coins
+    </div>
+</div>
+<div style="margin-top:50px">
+    <h2>Mapa</h2>
+</div>
+@{int actual = 0; }
+<table align="center">
+    <tr>
+        <td style="padding:10px">
+            <table style="background-color:aquamarine">
+                @for (int i = 0; i < Model.Game.MaxPlayers * 5; i++)
+                {
+                    <tr>
+                        @for (int j = 0; j < Model.Game.MaxPlayers * 5; j++)
+                        {
+                            <td style="width: 50px; height: 50px; border: 1px solid black">
+                                @if (Model.Islands[actual].X == j && Model.Islands[actual].Y == i)
+                                {
+                                    <a href="@Url.Action("Island", "Game", new { id = Model.Islands[actual].Id })">
+                                        @if (Model.Islands[actual].Property == null)
+                                        {
+                                            <img src="@Url.Content("~/Images/island.png")" style="width: 50px; height: 50px" />
+                                        }
+                                        else
+                                        {
+                                            switch (Model.Islands[actual].Property.Color)
+                                            {
+                                                case NewWorld.Models.Color.green:
+                                                    <img src="@Url.Content("~/Images/island_green.png")" style="width: 50px; height: 50px" />
+                                                    break;
+                                                case NewWorld.Models.Color.purple:
+                                                    <img src="@Url.Content("~/Images/island_purple.png")" style="width: 50px; height: 50px" />
+                                                    break;
+                                                case NewWorld.Models.Color.red:
+                                                    <img src="@Url.Content("~/Images/island_red.png")" style="width: 50px; height: 50px" />
+                                                    break;
+                                                case NewWorld.Models.Color.yellow:
+                                                    <img src="@Url.Content("~/Images/island_yellow.png")" style="width: 50px; height: 50px" />
+                                                    break;
+                                            }
+                                        }
+                                    </a>
+                                    actual++;
+                                    if (actual == Model.Islands.Count)
+                                    {
+                                        actual--;
+                                    }
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </td>
+        <td style="padding: 10px; ">
+            <div style="background-color:black; padding:10px; font-size:24px">
+                @foreach (NewWorld.Models.UserGameProperty property in Model.AllPlayers)
+                {
+                    <div style="color:
+                    @switch (property.Color)
+                    {
+                        case NewWorld.Models.Color.green:
+                            <text> green </text>
+                            break;
+                        case NewWorld.Models.Color.purple:
+                            <text> purple </text>
+                            break;
+                        case NewWorld.Models.Color.red:
+                            <text> red </text>
+                            break;
+                        case NewWorld.Models.Color.yellow:
+                            <text>yellow</text>
+                            break;
+                    }">
+                        @property.Player.UserName
+                    </div>
+                }
+            </div>
 
-<h2>Mapa</h2>
-
-
-<table style="background-color:aquamarine">
-    @for (int i = 0; i < Model.Game.MaxPlayers * 5; i++)
-    {
-        <tr>
-            @for (int j = 0; j < Model.Game.MaxPlayers * 5; j++)
-            {
-                <td style="width: 50px; height: 50px; border: 1px solid black">
-                    o
-                </td>
-            }
-        </tr>
-    }
+        </td>
+    </tr>
 </table>
-

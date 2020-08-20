@@ -83,7 +83,10 @@ namespace NewWorld.Controllers
             game.Players.Remove(user);
             db.UserGameProperties.Remove(userGameProperty);
             if (game.Players.Count == 0)
+            {
+                db.Islands.RemoveRange(db.Islands.Where(a => a.Game.Id == game.Id).ToList());
                 db.Games.Remove(game);
+            }
             db.SaveChanges();
             return RedirectToAction("GameList");
         }
@@ -223,8 +226,9 @@ namespace NewWorld.Controllers
                         Papryka = false,
                         Glinianka = 2,
                         Zelazo = 2,
-                        Property = properties[i]
-                    };
+                        Property = properties[i],
+                        Game = game
+                    }; 
                     islands.Add(island);
                 }
                 //losowanie pustych wysp
@@ -264,7 +268,8 @@ namespace NewWorld.Controllers
                         Papryka = rand.Next(1, 9) <= 5,
                         Glinianka = glinianka,
                         Zelazo = zelazo,
-                        Property = null
+                        Property = null,
+                        Game=game
                     };
                     islands.Add(island);
                 }
