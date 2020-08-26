@@ -1,15 +1,42 @@
 ﻿@model NewWorld.Models.IslandViewModel
 @{
     ViewBag.Title = Model.Island.Name;
+    ViewBag.Id = Model.Island.Game.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div style="background-color:bisque; border-color:bisque; min-height:35px; position:fixed; right:0; left:0; padding:5px">
-    <div style="padding-left:40px; font-size:17px">
+    <div style="padding-left:40px; font-size:17px; float:left">
         <img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /> @Model.Coins
         @if (Model.YourIsland)
         {
-            <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px; padding-left:5px" />  @Math.Floor(Model.Resources.Deski) 
-            <img src="@Url.Content("~/Images/cegly.png")" style="width: 25px; height: 25px; padding-left:5px" />  @Math.Floor(Model.Resources.Cegly) 
+            <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Deski)
+            <img src="@Url.Content("~/Images/cegly.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Cegly)
+        }
+    </div>
+    <div style="padding-right: 40px; font-size: 17px;float:right">
+        @if (Model.Island.Ziemniaki)
+        {
+            <img src="@Url.Content("~/Images/ziemniaki.png")" style="width: 25px; height: 25px; margin-left:10px" />
+        }
+        @if (Model.Island.Chmiel)
+        {
+            <img src="@Url.Content("~/Images/chmiel.png")" style="width: 25px; height: 25px; margin-left:10px" />
+        }
+        @if (Model.Island.Zboze)
+        {
+            <img src="@Url.Content("~/Images/zboze.png")" style="width: 25px; height: 25px; margin-left:10px" />
+        }
+        @if (Model.Island.Papryka)
+        {
+            <img src="@Url.Content("~/Images/papryka.png")" style="width: 25px; height: 25px; margin-left:10px" />
+        }
+        @if (Model.Island.Glinianka > 0)
+        {
+            <img src="@Url.Content("~/Images/glina.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Model.Island.Glinianka
+        }
+        @if (Model.Island.Zelazo > 0)
+        {
+            <img src="@Url.Content("~/Images/zelazo.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Model.Island.Zelazo
         }
     </div>
 </div>
@@ -33,8 +60,6 @@
                             break;
                     }
 }
-
-
 ">
     <h2>@Model.Island.Name</h2>
 </div>

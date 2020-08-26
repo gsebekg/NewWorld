@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -87,6 +88,125 @@ namespace NewWorld.Models
             Deski = 50;
             Ryby = 10;
         }
-    }
 
+        public List<double> BuildList()
+        {
+            return new List<double>
+            {
+            Deski ,
+            Cegly ,
+            Zagle ,
+            StaloweBelki ,
+            Okna ,
+            Ryby ,
+            Sznaps ,
+            Ubrania ,
+            Kiełbasa ,
+            Chleb ,
+            Mydlo ,
+            Piwo ,
+            Konserwy ,
+            MaszynyDoSzycia ,
+            Drewno ,
+            Ziemniaki ,
+            Welna ,
+            Glinianka ,
+            Swinie ,
+            Zboze ,
+            Maka ,
+            Zelazo ,
+            Wegiel ,
+            Stal ,
+            Loj ,
+            Chmiel ,
+            Slod ,
+            Piasek ,
+            Szklo ,
+            Wolowina ,
+            Papryka ,
+            Gulasz
+            };
+        }
+
+        public void UnbuildList(List<double> list)
+        {
+            Deski = list[0];
+            Cegly = list[1];
+            Zagle = list[2];
+            StaloweBelki = list[3];
+            Okna = list[4];
+            Ryby = list[5];
+            Sznaps = list[6];
+            Ubrania = list[7];
+            Kiełbasa = list[8];
+            Chleb = list[9];
+            Mydlo = list[10];
+            Piwo = list[11];
+            Konserwy = list[12];
+            MaszynyDoSzycia = list[13];
+            Drewno = list[14];
+            Ziemniaki = list[15];
+            Welna = list[16];
+            Glinianka = list[17];
+            Swinie = list[18];
+            Zboze = list[19];
+            Maka = list[20];
+            Zelazo = list[21];
+            Wegiel = list[22];
+            Stal = list[23];
+            Loj = list[24];
+            Chmiel = list[25];
+            Slod = list[26];
+            Piasek = list[27];
+            Szklo = list[28];
+            Wolowina = list[29];
+            Papryka = list[30];
+            Gulasz = list[31];
+        }
+
+        public void AddResources(Resources resources)
+        {
+            List<double> actualResourcesList = this.BuildList();
+            List<double> resourcesList = resources.BuildList();
+            int i = 0;
+            foreach(double resource in resourcesList)
+            {
+                actualResourcesList[i] += resource;
+                if (actualResourcesList[i] > 200)
+                    actualResourcesList[i] = 200;
+                i++;
+            }
+            this.UnbuildList(actualResourcesList);
+        }
+
+        public void SubResources(Resources resources)
+        {
+            List<double> actualResourcesList = this.BuildList();
+            List<double> resourcesList = resources.BuildList();
+            int i = 0;
+            foreach (double resource in resourcesList)
+            {
+                actualResourcesList[i] -= resource;
+                if (actualResourcesList[i] < 0)
+                    actualResourcesList[i] = 0;
+                i++;
+            }
+            this.UnbuildList(actualResourcesList);
+        }
+
+        public static Resources MultResources(Resources resources, double multiplier)
+        {
+            List<double> resourcesList = resources.BuildList();
+            List<double> newList = new List<double>();
+            foreach (double resource in resourcesList)
+            {
+                newList.Add(resource * multiplier);
+            }
+            Resources result = new Resources();
+            result.UnbuildList(newList);
+            return result;
+        }
+
+    }
 }
+
