@@ -50,7 +50,7 @@ namespace NewWorld
         {
             if(Number>=howMany)
             {
-                yourResources.AddResources(Resources.MultResources(ResourcesCost, 0.5 * howMany);
+                yourResources.AddResources(Resources.MultResources(ResourcesCost, 0.5 * howMany));
                 yourCoins += (long)(CoinsCost * 0.5 * howMany);
                 Number -= howMany;
                 return true;

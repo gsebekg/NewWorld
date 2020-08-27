@@ -44,7 +44,10 @@ namespace NewWorld.Models
         public double Papryka { get; set; }
         public double Gulasz { get; set; }
 
-
+        public Resources()
+        {
+            this.ZeroResources();
+        }
 
         public void ZeroResources()
         {

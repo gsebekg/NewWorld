@@ -24,6 +24,7 @@ namespace NewWorld.Models
         public virtual UserGameProperty Property { get; set; }
         public virtual Resources Resources { get; set; }
         public virtual Game Game { get; set; }
+        public virtual Buildings Buildings { get; set; }
 
 
 

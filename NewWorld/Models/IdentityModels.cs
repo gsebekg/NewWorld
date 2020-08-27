@@ -35,6 +35,7 @@ namespace NewWorld.Models
         public DbSet<UserGameProperty> UserGameProperties { get; set; }
         public DbSet<Island> Islands { get; set; }
         public DbSet<Resources> Resources { get; set; }
+        public DbSet<Buildings> Buildings { get; set; }
 
         public static ApplicationDbContext Create()
         {
