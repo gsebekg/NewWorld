@@ -28,6 +28,9 @@ namespace NewWorld.Controllers
             UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Game.Id == game.Id).Where(b => b.Player.Id == user.Id).SingleOrDefault();
             if (!userGameProperty.Active || userGameProperty == null)
                 return RedirectToAction("GameList", "Home");
+            //USUNĄĆ!!!
+            CyclicProduct cyclic = new CyclicProduct();
+            cyclic.CalculateGame(id);
             MapViewModel viewModel = new MapViewModel
             {
                 Game = game,

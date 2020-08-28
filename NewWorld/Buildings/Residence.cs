@@ -15,7 +15,7 @@ namespace NewWorld
         public double ActualFarmers { get; set; }
         protected double goalFarmers;
         protected int MaxFarmers;
-        public int Consume(Resources yourResources)
+        public int Consume(Resources yourResources,out double actualFarmers)
         {
             if (Number > 0)
             {
@@ -26,17 +26,20 @@ namespace NewWorld
                 List<double> FarmersFromResourcesList = FarmersFromResources.BuildList();
                 int i = 0;
                 double coins = 0;
-                goalFarmers = 5;
+                goalFarmers = 5*Number;
                 foreach (double neededResource in neededResourcesList)
                 {
-                    satisfactionList[i] = yourResourcesList[i] / (neededResource * Number);
-                    if (satisfactionList[i] > 1)
-                        satisfactionList[i] = 1;
-                    yourResourcesList[i] -= neededResource * Number;
-                    if (yourResourcesList[i] < 0)
-                        yourResourcesList[i] = 0;
-                    coins += CoinsFromResourcesList[i] * satisfactionList[i] * Number;
-                    goalFarmers += FarmersFromResourcesList[i] * satisfactionList[i] * Number;
+                    if (neededResource > 0)
+                    {
+                        satisfactionList[i] = yourResourcesList[i] / (neededResource * Number);
+                        if (satisfactionList[i] > 1)
+                            satisfactionList[i] = 1;
+                        yourResourcesList[i] -= neededResource * Number;
+                        if (yourResourcesList[i] < 0)
+                            yourResourcesList[i] = 0;
+                        coins += CoinsFromResourcesList[i] * satisfactionList[i] * Number;
+                        goalFarmers += FarmersFromResourcesList[i] * satisfactionList[i] * Number;
+                    }
                     i++;
                 }
                 if (goalFarmers > ActualFarmers)
@@ -51,8 +54,12 @@ namespace NewWorld
                     if (goalFarmers > ActualFarmers)
                         ActualFarmers = goalFarmers;
                 }
+                yourResources.UnbuildList(yourResourcesList);
+                Satisfaction.UnbuildList(satisfactionList);
+                actualFarmers = ActualFarmers;
                 return (int)Math.Floor(coins);
             }
+            actualFarmers = ActualFarmers;
             return 0;
         }
     }

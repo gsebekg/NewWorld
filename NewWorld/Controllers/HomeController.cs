@@ -84,7 +84,8 @@ namespace NewWorld.Controllers
             db.UserGameProperties.Remove(userGameProperty);
             if (game.Players.Count == 0)
             {
-                db.Islands.RemoveRange(db.Islands.Where(a => a.Game.Id == game.Id).ToList());
+                List<Island> islands = db.Islands.Where(a => a.Game.Id == game.Id).ToList();
+                db.Islands.RemoveRange(islands).ToList();
                 db.Games.Remove(game);
             }
             db.SaveChanges();
@@ -228,7 +229,8 @@ namespace NewWorld.Controllers
                         Zelazo = 2,
                         Property = properties[i],
                         Game = game
-                    }; 
+                    };
+                    island.Buildings = new Buildings();
                     islands.Add(island);
                 }
                 //losowanie pustych wysp
@@ -271,6 +273,7 @@ namespace NewWorld.Controllers
                         Property = null,
                         Game=game
                     };
+                    island.Buildings = new Buildings();
                     islands.Add(island);
                 }
                 db.Islands.AddRange(islands);

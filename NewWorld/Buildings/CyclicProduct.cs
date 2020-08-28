@@ -37,14 +37,26 @@ namespace NewWorld
                     {
                         neededFarmerzy += productionBuilding.NeededFarmers * productionBuilding.Number;
                     }
-                    double farmersProductivity = buildings.Farmerzy / neededFarmerzy;
-                    foreach (ProductionBuilding productionBuilding in productionBuildings)
+                    if (neededFarmerzy > 0)
                     {
-                        productionBuilding.Product(island.Resources, ref coins,farmersProductivity);
+                        double farmersProductivity = buildings.Farmerzy / neededFarmerzy;
+                        foreach (ProductionBuilding productionBuilding in productionBuildings)
+                        {
+                            productionBuilding.Product(island.Resources, ref coins, farmersProductivity);
+                        }
                     }
+                    double actualFarmers = 0 ;
+                    foreach (Residence residence in residences)
+                    {
+                        coins += residence.Consume(island.Resources, out actualFarmers);
+                    }
+                    Resources satisfaction = buildings.FarmersSatisfaction;
+                    satisfaction = residences[0].Satisfaction;
+                    buildings.Farmerzy = actualFarmers;
                 }
                 property.Coins = coins;
             }
+            db.SaveChanges();
 
         }
     }

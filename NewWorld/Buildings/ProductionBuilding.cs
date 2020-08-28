@@ -21,7 +21,9 @@ namespace NewWorld
                 List<double> yourResourcesList = yourResources.BuildList();
                 List<double> productResourcesList = ProductResources.BuildList();
                 List<double> neededResourcesList = NeededResources.BuildList();
-                double productivity = farmersProductivity * Number * neededResourcesList.Max();
+                if (farmersProductivity > 1)
+                    farmersProductivity = 1;
+                double productivity = farmersProductivity * Number * productResourcesList.Max();
                 double productivityTmp;
                 int i = 0;
                 // obliczamy na jaką produktywnośc starczy nam surowców i na ile mamy miejsca
