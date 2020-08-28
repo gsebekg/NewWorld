@@ -11,6 +11,7 @@
         {
             <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Deski)
             <img src="@Url.Content("~/Images/cegly.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Cegly)
+            <img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Buildings.Farmerzy)
         }
     </div>
     <div style="padding-right: 40px; font-size: 17px;float:right">
@@ -63,5 +64,48 @@
 ">
     <h2>@Model.Island.Name</h2>
 </div>
+<table style="width:100%; color:black">
+    <tr>
+        <td style="width:20%">
+            Farmerzy
+        </td>
+        <td style="width:80%">
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Rezydencja farmerów
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/RezydencjaFarmerow.jpg")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Zamieszkuje w niej do 10<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> <br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> <br />
+                        Liczba wybudowanych: 3
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:5px">
+                        <form action="Game/build">
+                            <input type="hidden" id="id" name="id" value="@Model.Island.Id">
+                            <input type="hidden" id="name" name="name" value="RezydencjaFarmerow">
+                            <input type="number" id="number" name="number">
+                            <input type="submit" value="Zbuduj">
+                        </form>
+                        <br />
+                        <form action="/destroy">
+                            <input type="number" id="number" name="number">
+                            <input type="submit" value="Zburz">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
 
 

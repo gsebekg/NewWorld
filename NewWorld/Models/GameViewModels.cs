@@ -20,6 +20,7 @@ namespace NewWorld.Models
         public UserGameProperty Property { get; set; }
         public Resources Resources { get; set; }
         public Island Island { get; set; }
+        public Buildings Buildings { get; set; }
         public long Coins { get; set; }
     }
 }

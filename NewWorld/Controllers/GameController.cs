@@ -61,7 +61,14 @@ namespace NewWorld.Controllers
             if (viewModel.YourIsland)
                 viewModel.Resources = island.Resources;
             viewModel.Coins = db.UserGameProperties.Where(a => a.Player.Id == user.Id).Where(b => b.Game.Id == island.Game.Id).SingleOrDefault().Coins;
+            viewModel.Buildings = island.Buildings;
             return View(viewModel);
+        }
+
+        [Authorize]
+        public ActionResult Build(int id, int number, string name)
+        {
+            return View();
         }
     }
 }

@@ -321,6 +321,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Buildings\ChatkaRybacka.jpg" />
+    <Content Include="Images\Buildings\RezydencjaFarmerow.jpg" />
     <Content Include="Images\cegly.png" />
     <Content Include="Images\cegly_big.png" />
     <Content Include="Images\chmiel.png" />

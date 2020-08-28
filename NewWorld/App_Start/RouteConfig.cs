@@ -13,6 +13,12 @@ namespace NewWorld
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapRoute(
+            //    name: "Build",
+            //    url: "Game/{action}?{id}&{name}&{number}",
+            //    defaults: new { controller = "Game"}
+            //);
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
