@@ -8,7 +8,14 @@ namespace NewWorld
 {
     public class RezydencjaFarmerow : Residence
     {
-        public RezydencjaFarmerow(double farmers, int number)
+        public RezydencjaFarmerow(double farmers, int number) :this()
+        {
+            
+            ActualFarmers = farmers;
+            Number = number;
+        }
+
+        public RezydencjaFarmerow()
         {
             NeededResources = new Resources();
             NeededResources.Ryby = 0.00625;
@@ -24,8 +31,8 @@ namespace NewWorld
             FarmersFromResources.Ubrania = 2;
             ResourcesCost = new Resources();
             ResourcesCost.Deski = 2;
-            ActualFarmers = farmers;
-            Number = number;
+            ActualFarmers = 0;
+            Number = 0;
         }
     }
 }

@@ -49,6 +49,7 @@ namespace NewWorld.Models
             this.ZeroResources();
         }
 
+
         public void ZeroResources()
         {
             Deski = 0;
@@ -172,7 +173,7 @@ namespace NewWorld.Models
             List<double> actualResourcesList = this.BuildList();
             List<double> resourcesList = resources.BuildList();
             int i = 0;
-            foreach(double resource in resourcesList)
+            foreach (double resource in resourcesList)
             {
                 actualResourcesList[i] += resource;
                 if (actualResourcesList[i] > 200)
@@ -209,7 +210,51 @@ namespace NewWorld.Models
             result.UnbuildList(newList);
             return result;
         }
+        public static List<string> ResourceImage()
+        {
+            return new List<string> {
+            "deski",
+        "cegly",
+        "zagle",
+        "stalowe_belki",
+        "okna",
+        "ryby",
+        "sznaps",
+        "ubrania",
+        "kielbasa",
+        "chleb",
+        "mydlo",
+        "piwo",
+        "konserwy",
+        "maszyny_do_szycia",
+        "drewno",
+        "ziemniaki",
+        "welna",
+        "glina",
+        "swinie",
+        "zboze",
+        "maka",
+        "zelazo",
+        "wegiel",
+        "stal",
+        "loj",
+        "chmiel",
+        "slod",
+        "piasek",
+        "szklo",
+        "wolowina",
+        "papryka",
+        "gulasz"
+        };
+        }
 
     }
+    public static class ResourceImages
+    {
+        public static List<string> list { get; set; }
+
+
+    }
+
 }
 

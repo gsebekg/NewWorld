@@ -21,6 +21,37 @@ namespace NewWorld.Models
         public Resources Resources { get; set; }
         public Island Island { get; set; }
         public Buildings Buildings { get; set; }
+        public List<int> MaxBuildings { get; set; }
         public long Coins { get; set; }
+        public List<string> ResourceImages { get; set; }
+        public List<double> ResourcesList { get; set; }
     }
+
+    public class BuildDestroyViewModel
+    {
+        public int Name { get; set; }
+        public int Id { get; set; }
+        public int Number { get; set; }
+    }
+
+    public class BuildingList
+    {
+        public List<Building> buildings;
+        public BuildingList(Island island)
+        {
+            Buildings buildings1 = island.Buildings;
+            buildings = new List<Building> { 
+                new RezydencjaFarmerow(buildings1.Farmerzy,buildings1.RezydencjaFarmerow),
+                new ChatkaRybacka(buildings1.ChatkaRybacka) 
+            };
+        }
+
+        public void ListToBuildings(Island island)
+        {
+            Buildings buildings1 = island.Buildings;
+            buildings1.RezydencjaFarmerow = this.buildings[0].Number;
+            buildings1.ChatkaRybacka = this.buildings[1].Number;
+        }
+    }
+
 }

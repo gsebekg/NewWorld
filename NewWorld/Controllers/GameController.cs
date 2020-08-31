@@ -62,13 +62,44 @@ namespace NewWorld.Controllers
                 viewModel.Resources = island.Resources;
             viewModel.Coins = db.UserGameProperties.Where(a => a.Player.Id == user.Id).Where(b => b.Game.Id == island.Game.Id).SingleOrDefault().Coins;
             viewModel.Buildings = island.Buildings;
+            BuildingList buildings = new BuildingList(island);
+            int sum = 0;
+            if (viewModel.YourIsland)
+            {
+                viewModel.MaxBuildings = new List<int>();
+                foreach (Building building in buildings.buildings)
+                    sum += building.Number;
+                foreach (Building building in buildings.buildings)
+                    viewModel.MaxBuildings.Add(building.HowManyCanYouBuild(island.Resources, viewModel.Coins, sum));
+                viewModel.ResourceImages = Resources.ResourceImage();
+                viewModel.ResourcesList = viewModel.Resources.BuildList();
+            }
             return View(viewModel);
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Build(int id, int number, string name)
+        public ActionResult Build([Bind(Include = "Id,Number,Name")] BuildDestroyViewModel viewModel)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+                Island island = db.Islands.Find(viewModel.Id);
+                if (island != null && island.Property.Player.Id==user.Id)
+                {
+                    BuildingList buildings = new BuildingList(island);
+                    Building building = buildings.buildings[viewModel.Name];
+                    long coins = island.Property.Coins;
+                    int sum = 0;
+                    foreach (Building building1 in buildings.buildings)
+                        sum += building1.Number;
+                    building.Build(viewModel.Number, island.Resources, ref coins, island.Place-sum); //do uzupełnienia freeplace
+                    buildings.ListToBuildings(island);
+                    island.Property.Coins = coins;
+                    db.SaveChanges();
+                }
+            }
+            return RedirectToAction("Island", new { id = viewModel.Id });
         }
     }
 }

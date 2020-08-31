@@ -8,7 +8,12 @@ namespace NewWorld
 {
     public class ChatkaRybacka : ProductionBuilding
     {
-        public ChatkaRybacka(int number)
+        public ChatkaRybacka(int number):this()
+        {
+
+            Number = number;
+        }
+        public ChatkaRybacka()
         {
             ResourcesCost = new Resources();
             ResourcesCost.Deski = 2;
@@ -18,7 +23,7 @@ namespace NewWorld
             ProductResources.Ryby = 0.5;
             NeededFarmers = 25;
             WorkCost = 10;
-            Number = number;
+            Number = 0;
         }
     }
 }
