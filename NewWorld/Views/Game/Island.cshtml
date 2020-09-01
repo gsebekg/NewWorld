@@ -41,7 +41,7 @@
         }
     </div>
 </div>
-<div style="margin-top:50px
+<div style="margin-top:50px; font-size:7px
 @if(!Model.EmptyIsland)
 {
     <text>; color:</text>
@@ -62,7 +62,12 @@
                     }
 }
 ">
-    <h2>@Model.Island.Name</h2>
+    <h2 style="display:inline">@Model.Island.Name</h2>
+    @if (Model.YourIsland)
+    {
+        @Html.ActionLink("[Zmień nazwę]", "ChangeName", new { id = Model.Island.Id }) 
+    }
+
 </div>
 @if (Model.YourIsland)
 {

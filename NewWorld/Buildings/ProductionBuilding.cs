@@ -44,7 +44,7 @@ namespace NewWorld
                     i++;
                 }
                 //mnozymy produkowane zasoby i dodajemy do aktualnych
-                Resources resultResources = Resources.MultResources(ProductResources, productivity);
+                Resources resultResources = Resources.MultResources(ProductResources, productivity/ productResourcesList.Max());
                 yourResources.AddResources(resultResources);
                 //mnozymy potrzebne zasoby i odejmujemy od aktualnych
                 resultResources = Resources.MultResources(NeededResources, productivity);

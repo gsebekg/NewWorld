@@ -55,6 +55,7 @@ namespace NewWorld.Controllers
                     else
                     {
                         game.CreateDate = DateTime.Now;
+                        game.Update = DateTime.Now;
                         game.IsBegan = false;
                         UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = 0, Player = user, Coins=50000 };
                         game.Players = new List<ApplicationUser> { user };
@@ -186,6 +187,7 @@ namespace NewWorld.Controllers
             if (game.NumberOfPlayers() == game.MaxPlayers)
             {
                 game.IsBegan = true;
+                game.Update= DateTime.Now;
                 db.SaveChanges();
                 Random rand = new Random();
                 List<UserGameProperty> properties = db.UserGameProperties.Where(a => a.Game.Id == game.Id).ToList();

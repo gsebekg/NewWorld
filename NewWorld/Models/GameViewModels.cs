@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -54,4 +55,13 @@ namespace NewWorld.Models
         }
     }
 
+    public class ChangeNameViewModel
+    {
+        [Required(ErrorMessage = "Wprowadź nową nazwę wyspy")]
+        [Display(Name = "Nowa nazwa wyspy")]
+        [StringLength(25, MinimumLength = 3, ErrorMessage = "Nazwa musi mieć długość z zakresu od {2} do {1}")]
+        public string NewName { get; set; }
+        public int Id { get; set; }
+        public bool? NameUsed { get; set; }
+    }
 }

@@ -298,6 +298,10 @@
     <Compile Include="Migrations\202008280949313_ZmianyWBuildings.Designer.cs">
       <DependentUpon>202008280949313_ZmianyWBuildings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009010729353_AddUpdateToGame.cs" />
+    <Compile Include="Migrations\202009010729353_AddUpdateToGame.Designer.cs">
+      <DependentUpon>202009010729353_AddUpdateToGame.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Buildings.cs" />
@@ -427,6 +431,7 @@
     <Content Include="Views\Home\GiveUp.cshtml" />
     <Content Include="Views\Game\Map.cshtml" />
     <Content Include="Views\Game\Island.cshtml" />
+    <Content Include="Views\Game\ChangeName.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -490,6 +495,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008280949313_ZmianyWBuildings.resx">
       <DependentUpon>202008280949313_ZmianyWBuildings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009010729353_AddUpdateToGame.resx">
+      <DependentUpon>202009010729353_AddUpdateToGame.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

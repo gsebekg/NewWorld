@@ -24,6 +24,7 @@ namespace NewWorld.Models
         [Display(Name = "Hasło (opcjonalne)")]
         [StringLength(25, ErrorMessage = "Maksymalna długośc hasła to {1}")]
         public string Password { get; set; }
+        public DateTime Update { get; set; }
         public virtual ICollection<ApplicationUser> Players { get; set; }
         public virtual ICollection<UserGameProperty> UserGameProperties { get; set; }
 

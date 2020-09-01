@@ -1,0 +1,35 @@
+﻿@model  NewWorld.Models.ChangeNameViewModel
+@{
+    ViewBag.Title = "Zmień nazwę wyspy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Zmień nazwę wyspy</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.NewName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NewName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NewName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @if (Model.NameUsed.GetValueOrDefault())
+    {
+        <div class="text-danger">
+            Nazwa jest już używana
+        </div>
+    }
+    @Html.HiddenFor(m => m.Id)
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Zmień" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}

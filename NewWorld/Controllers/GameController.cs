@@ -28,9 +28,7 @@ namespace NewWorld.Controllers
             UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Game.Id == game.Id).Where(b => b.Player.Id == user.Id).SingleOrDefault();
             if (!userGameProperty.Active || userGameProperty == null)
                 return RedirectToAction("GameList", "Home");
-            //USUNĄĆ!!!
-            CyclicProduct cyclic = new CyclicProduct();
-            cyclic.CalculateGame(id);
+            CyclicProduct.CalculateGame(id,db);
             MapViewModel viewModel = new MapViewModel
             {
                 Game = game,
@@ -50,6 +48,7 @@ namespace NewWorld.Controllers
             //sprawdzanie czy gracz należy do tej gry i czy się nie wycofał
             if (!ids.Contains(user.Id) || island.Game.UserGameProperties.Where(a => a.Player.Id == user.Id).SingleOrDefault().Active == false)
                 return RedirectToAction("GameList", "Home");
+            CyclicProduct.CalculateGame(island.Game.Id,db);
             IslandViewModel viewModel = new IslandViewModel();
             viewModel.EmptyIsland = island.Property == null;
             if (!viewModel.EmptyIsland)
@@ -70,7 +69,7 @@ namespace NewWorld.Controllers
                 foreach (Building building in buildings.buildings)
                     sum += building.Number;
                 foreach (Building building in buildings.buildings)
-                    viewModel.MaxBuildings.Add(building.HowManyCanYouBuild(island.Resources, viewModel.Coins, sum));
+                    viewModel.MaxBuildings.Add(building.HowManyCanYouBuild(island.Resources, viewModel.Coins, island.Place-sum));
                 viewModel.ResourceImages = Resources.ResourceImage();
                 viewModel.ResourcesList = viewModel.Resources.BuildList();
             }
@@ -85,21 +84,81 @@ namespace NewWorld.Controllers
             {
                 ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
                 Island island = db.Islands.Find(viewModel.Id);
-                if (island != null && island.Property.Player.Id==user.Id)
+                if (island != null && island.Property.Player.Id == user.Id)
                 {
+                    CyclicProduct.CalculateGame(island.Game.Id,db);
                     BuildingList buildings = new BuildingList(island);
                     Building building = buildings.buildings[viewModel.Name];
                     long coins = island.Property.Coins;
                     int sum = 0;
                     foreach (Building building1 in buildings.buildings)
                         sum += building1.Number;
-                    building.Build(viewModel.Number, island.Resources, ref coins, island.Place-sum); //do uzupełnienia freeplace
+                    building.Build(viewModel.Number, island.Resources, ref coins, island.Place - sum);
                     buildings.ListToBuildings(island);
                     island.Property.Coins = coins;
                     db.SaveChanges();
                 }
             }
             return RedirectToAction("Island", new { id = viewModel.Id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult Destroy([Bind(Include = "Id,Number,Name")] BuildDestroyViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+                Island island = db.Islands.Find(viewModel.Id);
+                if (island != null && island.Property.Player.Id == user.Id)
+                {
+                    CyclicProduct.CalculateGame(island.Game.Id,db);
+                    BuildingList buildings = new BuildingList(island);
+                    Building building = buildings.buildings[viewModel.Name];
+                    long coins = island.Property.Coins;
+                    building.Destroy(viewModel.Number, island.Resources, ref coins);
+                    buildings.ListToBuildings(island);
+                    island.Property.Coins = coins;
+                    db.SaveChanges();
+                }
+            }
+            return RedirectToAction("Island", new { id = viewModel.Id });
+        }
+        [Authorize]
+        public ActionResult ChangeName(int id)
+        {
+            Island island = db.Islands.Find(id);
+            if (island.Property.Player.Id != User.Identity.GetUserId())
+                return RedirectToAction("Map");
+            ChangeNameViewModel viewModel = new ChangeNameViewModel { NameUsed = false, Id = id };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult ChangeName([Bind(Include = "Id,NewName")] ChangeNameViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                viewModel.NewName = viewModel.NewName.Trim();
+                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+                Island island = db.Islands.Find(viewModel.Id);
+                if (island != null && island.Property.Player.Id == user.Id)
+                {
+                    Game game = island.Game;
+                    if (db.Islands.Where(a => a.Game.Id == game.Id).Select(b => b.Name).Contains(viewModel.NewName))
+                    {
+                        viewModel.NameUsed = true;
+                        return View(viewModel);
+                    }
+                    island.Name = viewModel.NewName;
+                    db.SaveChanges();
+                    return RedirectToAction("Island", new { id = viewModel.Id });
+                }
+            }
+            return View(viewModel);
         }
     }
 }
