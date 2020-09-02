@@ -226,6 +226,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Buildings\Building.cs" />
+    <Compile Include="Buildings\FarmaZiemniakow.cs" />
+    <Compile Include="Buildings\FarmaOwiec.cs" />
+    <Compile Include="Buildings\DestylarniaSznapsu.cs" />
+    <Compile Include="Buildings\ZakladTkaczy.cs" />
+    <Compile Include="Buildings\Tartak.cs" />
+    <Compile Include="Buildings\ChatkaDrwala.cs" />
     <Compile Include="Buildings\ChatkaRybacka.cs" />
     <Compile Include="Buildings\CyclicProduct.cs" />
     <Compile Include="Buildings\ProductionBuilding.cs" />
@@ -302,6 +308,18 @@
     <Compile Include="Migrations\202009010729353_AddUpdateToGame.Designer.cs">
       <DependentUpon>202009010729353_AddUpdateToGame.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009020647006_DodatnieChatkiDrwala.cs" />
+    <Compile Include="Migrations\202009020647006_DodatnieChatkiDrwala.Designer.cs">
+      <DependentUpon>202009020647006_DodatnieChatkiDrwala.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009020744573_DodatnieWszystkichBudynkowFarmerskich.cs" />
+    <Compile Include="Migrations\202009020744573_DodatnieWszystkichBudynkowFarmerskich.Designer.cs">
+      <DependentUpon>202009020744573_DodatnieWszystkichBudynkowFarmerskich.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009021003230_DodatnieWymaganychFarmerow.cs" />
+    <Compile Include="Migrations\202009021003230_DodatnieWymaganychFarmerow.Designer.cs">
+      <DependentUpon>202009021003230_DodatnieWymaganychFarmerow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Buildings.cs" />
@@ -325,8 +343,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Buildings\ChatkaDrwala.png" />
     <Content Include="Images\Buildings\ChatkaRybacka.jpg" />
+    <Content Include="Images\Buildings\DestylarniaSznapsu.png" />
+    <Content Include="Images\Buildings\FarmaOwiec.jpg" />
+    <Content Include="Images\Buildings\FarmaZiemniakow.jpg" />
     <Content Include="Images\Buildings\RezydencjaFarmerow.jpg" />
+    <Content Include="Images\Buildings\Tartak.png" />
+    <Content Include="Images\Buildings\ZakladTkaczy.jpg" />
     <Content Include="Images\cegly.png" />
     <Content Include="Images\cegly_big.png" />
     <Content Include="Images\chleb.png" />
@@ -498,6 +522,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009010729353_AddUpdateToGame.resx">
       <DependentUpon>202009010729353_AddUpdateToGame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009020647006_DodatnieChatkiDrwala.resx">
+      <DependentUpon>202009020647006_DodatnieChatkiDrwala.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009020744573_DodatnieWszystkichBudynkowFarmerskich.resx">
+      <DependentUpon>202009020744573_DodatnieWszystkichBudynkowFarmerskich.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009021003230_DodatnieWymaganychFarmerow.resx">
+      <DependentUpon>202009021003230_DodatnieWymaganychFarmerow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -93,8 +93,10 @@ namespace NewWorld.Controllers
                     int sum = 0;
                     foreach (Building building1 in buildings.buildings)
                         sum += building1.Number;
-                    building.Build(viewModel.Number, island.Resources, ref coins, island.Place - sum);
+                    bool IsProductionBuilding = building.Build(viewModel.Number, island.Resources, ref coins, island.Place - sum) && building is ProductionBuilding;
                     buildings.ListToBuildings(island);
+                    if (IsProductionBuilding)
+                        island.Buildings.NeededFarmers+= (building as ProductionBuilding).NeededFarmers * viewModel.Number;
                     island.Property.Coins = coins;
                     db.SaveChanges();
                 }

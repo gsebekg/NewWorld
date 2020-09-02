@@ -41,17 +41,29 @@ namespace NewWorld.Models
         public BuildingList(Island island)
         {
             Buildings buildings1 = island.Buildings;
-            buildings = new List<Building> { 
+            buildings = new List<Building> {
                 new RezydencjaFarmerow(buildings1.Farmerzy,buildings1.RezydencjaFarmerow),
-                new ChatkaRybacka(buildings1.ChatkaRybacka) 
+                new ChatkaRybacka(buildings1.ChatkaRybacka),
+                new ChatkaDrwala(buildings1.ChatkaDrwala),
+                new Tartak(buildings1.Tartak),
+                new FarmaOwiec(buildings1.FarmaOwiec),
+                new ZakladTkaczy(buildings1.ZakladTkaczy),
+                new FarmaZiemniakow(buildings1.FarmaZiemniakow),
+                new DestylarniaSznapsu(buildings1.DestylarniaSznapsu)
             };
         }
 
         public void ListToBuildings(Island island)
         {
             Buildings buildings1 = island.Buildings;
-            buildings1.RezydencjaFarmerow = this.buildings[0].Number;
-            buildings1.ChatkaRybacka = this.buildings[1].Number;
+            buildings1.RezydencjaFarmerow = buildings[0].Number;
+            buildings1.ChatkaRybacka = buildings[1].Number;
+            buildings1.ChatkaDrwala = buildings[2].Number;
+            buildings1.Tartak = buildings[3].Number;
+            buildings1.FarmaOwiec = buildings[4].Number;
+            buildings1.ZakladTkaczy = buildings[5].Number;
+            buildings1.FarmaZiemniakow = buildings[6].Number;
+            buildings1.DestylarniaSznapsu = buildings[7].Number;
         }
     }
 

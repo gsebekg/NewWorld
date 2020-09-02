@@ -11,7 +11,7 @@
         {
             <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Deski)
             <img src="@Url.Content("~/Images/cegly.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Cegly)
-            <img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Buildings.Farmerzy)
+            <img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px; margin-left:10px" /> <div style="display:inline; color:darkred">@Model.Buildings.NeededFarmers</div><text>/</text>@Math.Floor(Model.Buildings.Farmerzy)
         }
     </div>
     <div style="padding-right: 40px; font-size: 17px;float:right">
@@ -65,37 +65,61 @@
     <h2 style="display:inline">@Model.Island.Name</h2>
     @if (Model.YourIsland)
     {
-        @Html.ActionLink("[Zmień nazwę]", "ChangeName", new { id = Model.Island.Id }) 
+        @Html.ActionLink("[Zmień nazwę]", "ChangeName", new { id = Model.Island.Id })
     }
 
 </div>
 @if (Model.YourIsland)
 {
-<table align="center">
-    <tr>
-        @for (int i = 0; i < Model.ResourceImages.Count() / 2; i++)
-        {
-            <td style="padding:10px; text-align:center">
-                <img src="/Images/@(Model.ResourceImages[i]).png" style="width: 25px; height: 25px"><br />
-                @Math.Floor(Model.ResourcesList[i])
-            </td>
-        }
-    </tr>
-    <tr>
-        @for (int i = Model.ResourceImages.Count() / 2; i < Model.ResourceImages.Count(); i++)
-        {
-            <td style="padding:10px; text-align:center">
-                <img src="/Images/@(Model.ResourceImages[i]).png" style="width: 25px; height: 25px"><br />
-                @Math.Floor(Model.ResourcesList[i])
-            </td>
-        }
-    </tr>
-</table>
+    <table align="center">
+        <tr>
+            @for (int i = 0; i < Model.ResourceImages.Count() / 2; i++)
+            {
+                <td style="padding:10px; text-align:center">
+                    <img src="/Images/@(Model.ResourceImages[i]).png" style="width: 25px; height: 25px"><br />
+                    @Math.Floor(Model.ResourcesList[i])
+                </td>
+            }
+        </tr>
+        <tr>
+            @for (int i = Model.ResourceImages.Count() / 2; i < Model.ResourceImages.Count(); i++)
+            {
+                <td style="padding:10px; text-align:center">
+                    <img src="/Images/@(Model.ResourceImages[i]).png" style="width: 25px; height: 25px"><br />
+                    @Math.Floor(Model.ResourcesList[i])
+                </td>
+            }
+        </tr>
+    </table>
 }
 <table style="width:100%; color:black">
     <tr>
-        <td style="width:20%">
-            Farmerzy
+        <td style="width:20%; vertical-align:top">
+            <table align="center">
+                <tr>
+                    <td style="padding:10px; text-align:center" colspan="3">
+                        Farmerzy
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:10px; text-align:center">
+                            <img src="~/Images/ryby.png" style="width: 25px; height: 25px"><br />
+                            @Math.Floor(Model.Buildings.FarmersSatisfaction.Ryby) %
+                        </td>
+                        <td style="padding:10px; text-align:center">
+                            <img src="~/Images/ubrania.png" style="width: 25px; height: 25px"><br />
+                            @Math.Floor(Model.Buildings.FarmersSatisfaction.Ubrania) %
+                        </td>
+                        <td style="padding:10px; text-align:center">
+                            <img src="~/Images/sznaps.png" style="width: 25px; height: 25px"><br />
+                            @Math.Floor(Model.Buildings.FarmersSatisfaction.Sznaps) %
+                        </td>
+                    </tr>
+                }
+            </table>
+
         </td>
         <td style="width:80%">
             <table border="1" cellpadding="50" style="width:100%">
@@ -155,7 +179,7 @@
                     <td style="padding:5px; width:60%">
                         Produkuje <img src="@Url.Content("~/Images/ryby.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
                         Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 25<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 10<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Utrzymanie: 25<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.ChatkaRybacka
                     </td>
                 </tr>
@@ -180,6 +204,276 @@
                                     <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
                                     <input type="hidden" id="Name" name="Name" value="1">
                                     <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.ChatkaRybacka" style="width:65px">
+                                    <input type="submit" value="Wyburz" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Chatka Drwala
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/ChatkaDrwala.png")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Produkuje <img src="@Url.Content("~/Images/drewno.png")" style="width: 25px; height: 25px" /> co 1 minutę<br />
+                        Koszt wybudowania: 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
+                        Utrzymanie: 5<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Liczba wybudowanych: @Model.Buildings.ChatkaDrwala
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:5px">
+                            @using (Html.BeginForm("Build", "Game", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                <input type="hidden" id="Name" name="Name" value="2">
+                                <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.MaxBuildings[2]" style="width:65px">
+                                <input type="submit" value="Zbuduj" />
+                            }
+                            @if (Model.Buildings.ChatkaDrwala > 0)
+                            {
+                                <br />
+                                using (Html.BeginForm("Destroy", "Game", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                    <input type="hidden" id="Name" name="Name" value="2">
+                                    <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.ChatkaDrwala" style="width:65px">
+                                    <input type="submit" value="Wyburz" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Tartak
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/Tartak.png")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Produkuje <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> z <img src="@Url.Content("~/Images/drewno.png")" style="width: 25px; height: 25px" /> co 1 minutę<br />
+                        Koszt wybudowania: 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
+                        Utrzymanie: 10<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Liczba wybudowanych: @Model.Buildings.Tartak
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:5px">
+                            @using (Html.BeginForm("Build", "Game", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                <input type="hidden" id="Name" name="Name" value="3">
+                                <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.MaxBuildings[3]" style="width:65px">
+                                <input type="submit" value="Zbuduj" />
+                            }
+                            @if (Model.Buildings.Tartak > 0)
+                            {
+                                <br />
+                                using (Html.BeginForm("Destroy", "Game", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                    <input type="hidden" id="Name" name="Name" value="3">
+                                    <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.Tartak" style="width:65px">
+                                    <input type="submit" value="Wyburz" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Farma owiec
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/FarmaOwiec.jpg")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Produkuje <img src="@Url.Content("~/Images/welna.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
+                        Utrzymanie: 10<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Liczba wybudowanych: @Model.Buildings.FarmaOwiec
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:5px">
+                            @using (Html.BeginForm("Build", "Game", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                <input type="hidden" id="Name" name="Name" value="4">
+                                <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.MaxBuildings[4]" style="width:65px">
+                                <input type="submit" value="Zbuduj" />
+                            }
+                            @if (Model.Buildings.FarmaOwiec > 0)
+                            {
+                                <br />
+                                using (Html.BeginForm("Destroy", "Game", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                    <input type="hidden" id="Name" name="Name" value="4">
+                                    <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.FarmaOwiec" style="width:65px">
+                                    <input type="submit" value="Wyburz" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Zakład tkaczy
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/ZakladTkaczy.jpg")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Produkuje <img src="@Url.Content("~/Images/ubrania.png")" style="width: 25px; height: 25px" /> z <img src="@Url.Content("~/Images/welna.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 400<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
+                        Utrzymanie: 50<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 12.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Liczba wybudowanych: @Model.Buildings.ZakladTkaczy
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:5px">
+                            @using (Html.BeginForm("Build", "Game", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                <input type="hidden" id="Name" name="Name" value="5">
+                                <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.MaxBuildings[5]" style="width:65px">
+                                <input type="submit" value="Zbuduj" />
+                            }
+                            @if (Model.Buildings.ZakladTkaczy > 0)
+                            {
+                                <br />
+                                using (Html.BeginForm("Destroy", "Game", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                    <input type="hidden" id="Name" name="Name" value="5">
+                                    <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.ZakladTkaczy" style="width:65px">
+                                    <input type="submit" value="Wyburz" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Farma ziemniaków
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/FarmaZiemniakow.jpg")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Produkuje <img src="@Url.Content("~/Images/ziemniaki.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
+                        Utrzymanie: 20<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Liczba wybudowanych: @Model.Buildings.FarmaZiemniakow
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:5px">
+                            @using (Html.BeginForm("Build", "Game", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                <input type="hidden" id="Name" name="Name" value="6">
+                                <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.MaxBuildings[6]" style="width:65px">
+                                <input type="submit" value="Zbuduj" />
+                            }
+                            @if (Model.Buildings.FarmaZiemniakow > 0)
+                            {
+                                <br />
+                                using (Html.BeginForm("Destroy", "Game", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                    <input type="hidden" id="Name" name="Name" value="6">
+                                    <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.FarmaZiemniakow" style="width:65px">
+                                    <input type="submit" value="Wyburz" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <table border="1" cellpadding="50" style="width:100%">
+                <tr>
+                    <th colspan="2" style="text-align:center; padding:5px">
+                        Destylarnia sznapsu
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                        <img src="@Url.Content("~/Images/Buildings/DestylarniaSznapsu.png")" />
+                    </td>
+                    <td style="padding:5px; width:60%">
+                        Produkuje <img src="@Url.Content("~/Images/sznaps.png")" style="width: 25px; height: 25px" /> z <img src="@Url.Content("~/Images/ziemniaki.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
+                        Utrzymanie: 50<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 10<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                        Liczba wybudowanych: @Model.Buildings.DestylarniaSznapsu
+                    </td>
+                </tr>
+                @if (Model.YourIsland)
+                {
+                    <tr>
+                        <td style="padding:5px">
+                            @using (Html.BeginForm("Build", "Game", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                <input type="hidden" id="Name" name="Name" value="7">
+                                <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.MaxBuildings[7]" style="width:65px">
+                                <input type="submit" value="Zbuduj" />
+                            }
+                            @if (Model.Buildings.DestylarniaSznapsu > 0)
+                            {
+                                <br />
+                                using (Html.BeginForm("Destroy", "Game", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="Id" name="id" value="@Model.Island.Id">
+                                    <input type="hidden" id="Name" name="Name" value="7">
+                                    <input type="number" id="Number" name="Number" step="1" min="1" max="@Model.Buildings.DestylarniaSznapsu" style="width:65px">
                                     <input type="submit" value="Wyburz" />
                                 }
                             }

@@ -49,7 +49,7 @@ namespace NewWorld
                 //mnozymy potrzebne zasoby i odejmujemy od aktualnych
                 resultResources = Resources.MultResources(NeededResources, productivity);
                 yourResources.SubResources(resultResources);
-                coins -= WorkCost * Number;
+                coins -= WorkCost * Number/4;
             }
         }
     }

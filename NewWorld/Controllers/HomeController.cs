@@ -182,7 +182,7 @@ namespace NewWorld.Controllers
         private void AddUserToGame(ApplicationUser user, Game game)
         {
             game.Players.Add(user);
-            UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = (Color)(game.NumberOfPlayers() - 1), Player = user, Coins=50000 };
+            UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = (Color)(game.NumberOfPlayers() - 1), Player = user, Coins=10000 };
             game.UserGameProperties.Add(userGameProperty);
             if (game.NumberOfPlayers() == game.MaxPlayers)
             {
@@ -219,7 +219,7 @@ namespace NewWorld.Controllers
                     Island island = new Island
                     {
                         Name = "Wyspa " + properties[i].Player.UserName,
-                        Place = 250,
+                        Place = 500,
                         X = x,
                         Y = y,
                         Resources = resources,
@@ -262,7 +262,7 @@ namespace NewWorld.Controllers
                     Island island = new Island
                     {
                         Name = "Wyspa " + (i+1),
-                        Place = rand.Next(150,301),
+                        Place = rand.Next(300,601),
                         X = x,
                         Y = y,
                         Resources = resources,

@@ -39,6 +39,7 @@ namespace NewWorld
                             yourResourcesList[i] = 0;
                         coins += CoinsFromResourcesList[i] * satisfactionList[i] * Number;
                         goalFarmers += FarmersFromResourcesList[i] * satisfactionList[i] * Number;
+                        satisfactionList[i] *= 100;
                     }
                     i++;
                 }

@@ -27,7 +27,13 @@ namespace NewWorld
                         Buildings buildings = island.Buildings;
                         List<ProductionBuilding> productionBuildings = new List<ProductionBuilding>
                     {
-                        new ChatkaRybacka(buildings.ChatkaRybacka)
+                        new ChatkaRybacka(buildings.ChatkaRybacka),
+                        new ChatkaDrwala(buildings.ChatkaDrwala),
+                        new Tartak(buildings.Tartak),
+                        new FarmaOwiec(buildings.FarmaOwiec),
+                        new ZakladTkaczy(buildings.ZakladTkaczy),
+                        new FarmaZiemniakow(buildings.FarmaZiemniakow),
+                        new DestylarniaSznapsu(buildings.DestylarniaSznapsu)
                     };
                         List<Residence> residences = new List<Residence>
                     {
@@ -38,6 +44,7 @@ namespace NewWorld
                         {
                             neededFarmerzy += productionBuilding.NeededFarmers * productionBuilding.Number;
                         }
+                        buildings.NeededFarmers = neededFarmerzy;
                         if (neededFarmerzy > 0)
                         {
                             double farmersProductivity = buildings.Farmerzy / neededFarmerzy;
