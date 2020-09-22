@@ -13,6 +13,7 @@ namespace NewWorld
         {
             Game game = db.Games.Find(id);
             List<UserGameProperty> properties = game.UserGameProperties.ToList();
+            //obliczanie ile minut upłyneło od ostatniego update
             TimeSpan timeSinceLastUpdate = DateTime.Now.Subtract(game.Update);
             int NumberOfCycles = (int)timeSinceLastUpdate.TotalMinutes;
             game.Update = game.Update.AddMinutes(NumberOfCycles);
@@ -40,6 +41,7 @@ namespace NewWorld
                         new RezydencjaFarmerow(buildings.Farmerzy,buildings.RezydencjaFarmerow)
                     };
                         int neededFarmerzy = 0;
+                        //obliczanie potrzebnej ilości mieszkańców  w sumie
                         foreach (ProductionBuilding productionBuilding in productionBuildings)
                         {
                             neededFarmerzy += productionBuilding.NeededFarmers * productionBuilding.Number;
@@ -48,6 +50,7 @@ namespace NewWorld
                         if (neededFarmerzy > 0)
                         {
                             double farmersProductivity = buildings.Farmerzy / neededFarmerzy;
+                            //produkcja dla każdego rodzaju budynku produkcyjnego
                             foreach (ProductionBuilding productionBuilding in productionBuildings)
                             {
                                 productionBuilding.Product(island.Resources, ref coins, farmersProductivity);
@@ -57,6 +60,7 @@ namespace NewWorld
                         if (buildings.FarmersSatisfaction == null)
                             buildings.FarmersSatisfaction = new Resources();
                         residences[0].Satisfaction = buildings.FarmersSatisfaction;
+                        // wyżywnie ludzi z każdego typu budynku mieszkalnego
                         foreach (Residence residence in residences)
                         {
                             coins += residence.Consume(island.Resources, out actualFarmers);

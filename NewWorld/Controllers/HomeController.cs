@@ -22,11 +22,14 @@ namespace NewWorld.Controllers
         {
             this.db = db;
         }
+
+        //strona główna
         public ActionResult Index()
         {
             return View();
         }
 
+        //Lista gier, możliwość stworzenia, dołączenia itp
         [Authorize]
         public ActionResult GameList(bool? id)  //jeżeli id==true to masz juz maksymalna liczbę gier
         {
@@ -35,6 +38,7 @@ namespace NewWorld.Controllers
             return View(viewModel);
         }
 
+        //dodanie nowej gry
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,6 +77,8 @@ namespace NewWorld.Controllers
             return View(viewModel);
 
         }
+
+        //wycofanie się z gry
         [Authorize]
         public ActionResult Delete(int id)
         {
@@ -83,6 +89,7 @@ namespace NewWorld.Controllers
                 return RedirectToAction("GameList");
             game.Players.Remove(user);
             db.UserGameProperties.Remove(userGameProperty);
+            //jeżeli nie ma więcej graczy to usuń grę
             if (game.Players.Count == 0)
             {
                 List<Island> islands = db.Islands.Where(a => a.Game.Id == game.Id).ToList();
@@ -92,6 +99,7 @@ namespace NewWorld.Controllers
             db.SaveChanges();
             return RedirectToAction("GameList");
         }
+
         // dołącz do istniejącej gry
         [Authorize]
         public ActionResult Join(int id)
@@ -114,6 +122,7 @@ namespace NewWorld.Controllers
             return RedirectToAction("GameList");
         }
 
+        //dołączenie po sprawdzeniu hasła
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -137,6 +146,7 @@ namespace NewWorld.Controllers
             return View(new JoinViewModel { Id = viewModel.Id, Name = game.Name, WrongPassword = true });
         }
 
+        //poproś o potwierdzxenie decyzji
         [Authorize]
         public ActionResult GiveUp(int id)
         {
@@ -144,6 +154,7 @@ namespace NewWorld.Controllers
             return View(game);
         }
 
+        //po potwierdzeniu zwalniamy wyspy i wycofujemy gracza z gry
         [Authorize]
         public ActionResult GiveUpConfirmed(int id)
         {
@@ -233,6 +244,7 @@ namespace NewWorld.Controllers
                         Game = game
                     };
                     island.Buildings = new Buildings();
+                    island.Buildings.FarmersSatisfaction = new Resources();
                     islands.Add(island);
                 }
                 //losowanie pustych wysp

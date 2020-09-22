@@ -27,6 +27,7 @@ namespace NewWorld
                 int i = 0;
                 double coins = 0;
                 goalFarmers = 5*Number;
+                //konsumpcja i obliczanie satysfakcji dla każdego surowca
                 foreach (double neededResource in neededResourcesList)
                 {
                     if (neededResource > 0)
@@ -43,6 +44,7 @@ namespace NewWorld
                     }
                     i++;
                 }
+                // zmiana ilości mieszkańców
                 if (goalFarmers > ActualFarmers)
                 {
                     ActualFarmers += Number;

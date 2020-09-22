@@ -18,12 +18,12 @@ namespace NewWorld
         {
             if (Number > 0)
             {
-                List<double> yourResourcesList = yourResources.BuildList();
+                List<double> yourResourcesList = yourResources.BuildList(); 
                 List<double> productResourcesList = ProductResources.BuildList();
                 List<double> neededResourcesList = NeededResources.BuildList();
                 if (farmersProductivity > 1)
                     farmersProductivity = 1;
-                double productivity = farmersProductivity * Number * productResourcesList.Max();
+                double productivity = farmersProductivity * Number * productResourcesList.Max();   // maksymalna możliwa produkcja
                 double productivityTmp;
                 int i = 0;
                 // obliczamy na jaką produktywnośc starczy nam surowców i na ile mamy miejsca

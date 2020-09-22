@@ -18,6 +18,7 @@ namespace NewWorld.Controllers
             db = new ApplicationDbContext();
         }
 
+        //wyśiwetlanie mapy gry
         [Authorize]
         public ActionResult Map(int id)
         {
@@ -39,6 +40,7 @@ namespace NewWorld.Controllers
             return View(viewModel);
         }
 
+        //pobieranie informacji o wyspie
         [Authorize]
         public ActionResult Island(int id)
         {
@@ -75,6 +77,8 @@ namespace NewWorld.Controllers
             }
             return View(viewModel);
         }
+
+        //Budowanie budynków - każdy budynek ma inny Name przypisany w widoku
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -86,10 +90,11 @@ namespace NewWorld.Controllers
                 Island island = db.Islands.Find(viewModel.Id);
                 if (island != null && island.Property.Player.Id == user.Id)
                 {
-                    CyclicProduct.CalculateGame(island.Game.Id,db);
+                    CyclicProduct.CalculateGame(island.Game.Id,db);  // ponowne odświerzanie danych by sprawdzić czy dalej stać użytkownika
                     BuildingList buildings = new BuildingList(island);
                     Building building = buildings.buildings[viewModel.Name];
                     long coins = island.Property.Coins;
+                    //sprawdzanie ile jest zajętego miejsca
                     int sum = 0;
                     foreach (Building building1 in buildings.buildings)
                         sum += building1.Number;
@@ -104,6 +109,7 @@ namespace NewWorld.Controllers
             return RedirectToAction("Island", new { id = viewModel.Id });
         }
 
+        //wyburzanie budynków -zwrot połowy surowców
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -127,6 +133,8 @@ namespace NewWorld.Controllers
             }
             return RedirectToAction("Island", new { id = viewModel.Id });
         }
+
+        //zmiana nazwy wyspy
         [Authorize]
         public ActionResult ChangeName(int id)
         {
@@ -137,6 +145,7 @@ namespace NewWorld.Controllers
             return View(viewModel);
         }
 
+        //zmiana nazwy wyspy
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
