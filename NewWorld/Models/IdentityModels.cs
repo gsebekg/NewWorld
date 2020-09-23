@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using NewWorld.Repositories;
 
 namespace NewWorld.Models
 {
@@ -41,5 +42,12 @@ namespace NewWorld.Models
         {
             return new ApplicationDbContext();
         }
+    }
+
+    public static class Context
+    {
+        public static ApplicationDbContext DbContext;
+        public static GameRopository gameRopository;
+        public static UserRepository userRepository;
     }
 }
