@@ -6621,6 +6621,106 @@ button.close {
 .affix {
   position: fixed;
 }
+
+.head-resources {
+    background-color: bisque;
+    border-color: bisque;
+    min-height: 35px;
+    position: fixed;
+    right: 0;
+    left: 0;
+    padding: 5px;
+}
+
+.head-resources-left {
+    padding-left: 40px;
+    font-size: 17px;
+    float: left;
+}
+
+.head-resources-right {
+    padding-left: 40px;
+    font-size: 17px;
+    float: right;
+}
+
+.image-resource {
+    width: 25px;
+    height: 25px;
+}
+
+.image-resource-head {
+    margin-left: 10px;
+}
+
+td.resources-list {
+    padding: 10px;
+    text-align: center;
+}
+
+td.satisfaction-name {
+    padding: 10px;
+    text-align: center;
+}
+
+th.building {
+    text-align: center;
+    padding: 5px;
+}
+
+td.building-image {
+    padding: 5px;
+    text-align: center;
+    width: 40%;
+}
+
+td.map {
+    padding: 10px
+}
+
+table.map {
+    background-color: aquamarine
+}
+
+.legend {
+    background-color: black;
+    padding: 10px;
+    font-size: 24px;
+}
+
+.image-island {
+    width: 50px;
+    height: 50px;
+}
+
+td.map-cell {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+}
+
+td.building-text {
+    padding: 5px;
+    width: 60%;
+}
+
+td.building-options {
+    padding: 5px;
+}
+
+.big-table {
+    width: 100%;
+}
+
+#left-table {
+    width: 20%;
+    vertical-align: top;
+}
+
+#right-table {
+    width: 80%;
+}
+
 @-ms-viewport {
   width: device-width;
 }

@@ -4,40 +4,40 @@
     ViewBag.Id = Model.Island.Game.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div style="background-color:bisque; border-color:bisque; min-height:35px; position:fixed; right:0; left:0; padding:5px">
-    <div style="padding-left:40px; font-size:17px; float:left">
-        <img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /> @Model.Coins
+<div class="head-resources">
+    <div class="head-resources-left">
+        <img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /> @Model.Coins
         @if (Model.YourIsland)
         {
-            <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Deski)
-            <img src="@Url.Content("~/Images/cegly.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Math.Floor(Model.Resources.Cegly)
-            <img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px; margin-left:10px" /> <div style="display:inline; color:darkred">@Model.Buildings.NeededFarmers</div><text>/</text>@Math.Floor(Model.Buildings.Farmerzy)
+            <img src="@Url.Content("~/Images/deski.png")" class="image-resource image-resource-head"/> @Math.Floor(Model.Resources.Deski)
+            <img src="@Url.Content("~/Images/cegly.png")" class="image-resource image-resource-head" /> @Math.Floor(Model.Resources.Cegly)
+            <img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource image-resource-head" /> <div style="display:inline">@Model.Buildings.NeededFarmers</div><text>/</text>@Math.Floor(Model.Buildings.Farmerzy)
         }
     </div>
-    <div style="padding-right: 40px; font-size: 17px;float:right">
+    <div class="head-resources-right">
         @if (Model.Island.Ziemniaki)
         {
-            <img src="@Url.Content("~/Images/ziemniaki.png")" style="width: 25px; height: 25px; margin-left:10px" />
+            <img src="@Url.Content("~/Images/ziemniaki.png")" class="image-resource image-resource-head" />
         }
         @if (Model.Island.Chmiel)
         {
-            <img src="@Url.Content("~/Images/chmiel.png")" style="width: 25px; height: 25px; margin-left:10px" />
+            <img src="@Url.Content("~/Images/chmiel.png")" class="image-resource image-resource-head" />
         }
         @if (Model.Island.Zboze)
         {
-            <img src="@Url.Content("~/Images/zboze.png")" style="width: 25px; height: 25px; margin-left:10px" />
+            <img src="@Url.Content("~/Images/zboze.png")" class="image-resource image-resource-head" />
         }
         @if (Model.Island.Papryka)
         {
-            <img src="@Url.Content("~/Images/papryka.png")" style="width: 25px; height: 25px; margin-left:10px" />
+            <img src="@Url.Content("~/Images/papryka.png")" class="image-resource image-resource-head" />
         }
         @if (Model.Island.Glinianka > 0)
         {
-            <img src="@Url.Content("~/Images/glina.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Model.Island.Glinianka
+            <img src="@Url.Content("~/Images/glina.png")" class="image-resource image-resource-head" /> @Model.Island.Glinianka
         }
         @if (Model.Island.Zelazo > 0)
         {
-            <img src="@Url.Content("~/Images/zelazo.png")" style="width: 25px; height: 25px; margin-left:10px" /> @Model.Island.Zelazo
+            <img src="@Url.Content("~/Images/zelazo.png")" class="image-resource image-resource-head" /> @Model.Island.Zelazo
         }
     </div>
 </div>
@@ -75,8 +75,8 @@
         <tr>
             @for (int i = 0; i < Model.ResourceImages.Count() / 2; i++)
             {
-                <td style="padding:10px; text-align:center">
-                    <img src="/Images/@(Model.ResourceImages[i]).png" style="width: 25px; height: 25px"><br />
+                <td class="resources-list">
+                    <img src="/Images/@(Model.ResourceImages[i]).png" class="image-resource"><br />
                     @Math.Floor(Model.ResourcesList[i])
                 </td>
             }
@@ -84,36 +84,36 @@
         <tr>
             @for (int i = Model.ResourceImages.Count() / 2; i < Model.ResourceImages.Count(); i++)
             {
-                <td style="padding:10px; text-align:center">
-                    <img src="/Images/@(Model.ResourceImages[i]).png" style="width: 25px; height: 25px"><br />
+                <td class="resources-list">
+                    <img src="/Images/@(Model.ResourceImages[i]).png" class="image-resource"><br />
                     @Math.Floor(Model.ResourcesList[i])
                 </td>
             }
         </tr>
     </table>
 }
-<table style="width:100%; color:black">
+<table class="big-table">
     <tr>
-        <td style="width:20%; vertical-align:top">
+        <td id="left-table">
             <table align="center">
                 <tr>
-                    <td style="padding:10px; text-align:center" colspan="3">
+                    <td class="satisfaction-name" colspan="3">
                         Farmerzy
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:10px; text-align:center">
-                            <img src="~/Images/ryby.png" style="width: 25px; height: 25px"><br />
+                        <td class="satisfaction-name">
+                            <img src="~/Images/ryby.png" class="image-resource"><br />
                             @Math.Floor(Model.Buildings.FarmersSatisfaction.Ryby) %
                         </td>
-                        <td style="padding:10px; text-align:center">
-                            <img src="~/Images/ubrania.png" style="width: 25px; height: 25px"><br />
+                        <td class="satisfaction-name">
+                            <img src="~/Images/ubrania.png" class="image-resource"><br />
                             @Math.Floor(Model.Buildings.FarmersSatisfaction.Ubrania) %
                         </td>
-                        <td style="padding:10px; text-align:center">
-                            <img src="~/Images/sznaps.png" style="width: 25px; height: 25px"><br />
+                        <td class="satisfaction-name">
+                            <img src="~/Images/sznaps.png" class="image-resource"><br />
                             @Math.Floor(Model.Buildings.FarmersSatisfaction.Sznaps) %
                         </td>
                     </tr>
@@ -121,27 +121,27 @@
             </table>
 
         </td>
-        <td style="width:80%">
-            <table border="1" cellpadding="50" style="width:100%">
+        <td id="right-table">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Rezydencja farmerów
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/RezydencjaFarmerow.jpg")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Zamieszkuje w niej do 10<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> <br />
-                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> <br />
+                    <td class="building-text">
+                        Zamieszkuje w niej do 10<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> <br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> <br />
                         Liczba wybudowanych: @Model.Buildings.RezydencjaFarmerow
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -166,27 +166,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Chatka Rybacka
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/ChatkaRybacka.jpg")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/ryby.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
-                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 25<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/ryby.png")" class="image-resource" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> 100<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 25<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.ChatkaRybacka
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -211,27 +211,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Chatka Drwala
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/ChatkaDrwala.png")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/drewno.png")" style="width: 25px; height: 25px" /> co 1 minutę<br />
-                        Koszt wybudowania: 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 5<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/drewno.png")" class="image-resource" /> co 1 minutę<br />
+                        Koszt wybudowania: 100<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 5<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.ChatkaDrwala
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -256,27 +256,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Tartak
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/Tartak.png")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> z <img src="@Url.Content("~/Images/drewno.png")" style="width: 25px; height: 25px" /> co 1 minutę<br />
-                        Koszt wybudowania: 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 10<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> z <img src="@Url.Content("~/Images/drewno.png")" class="image-resource" /> co 1 minutę<br />
+                        Koszt wybudowania: 100<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 10<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 2.5<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.Tartak
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -301,27 +301,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Farma owiec
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/FarmaOwiec.jpg")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/welna.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
-                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 10<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/welna.png")" class="image-resource" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> 100<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 10<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 5<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.FarmaOwiec
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -346,27 +346,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Zakład tkaczy
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/ZakladTkaczy.jpg")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/ubrania.png")" style="width: 25px; height: 25px" /> z <img src="@Url.Content("~/Images/welna.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
-                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 400<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 50<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 12.5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/ubrania.png")" class="image-resource" /> z <img src="@Url.Content("~/Images/welna.png")" class="image-resource" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> 400<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 50<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 12.5<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.ZakladTkaczy
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -391,27 +391,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Farma ziemniaków
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/FarmaZiemniakow.jpg")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/ziemniaki.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
-                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 20<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 5<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/ziemniaki.png")" class="image-resource" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> 100<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 20<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 5<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.FarmaZiemniakow
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
@@ -436,27 +436,27 @@
                     </tr>
                 }
             </table>
-            <table border="1" cellpadding="50" style="width:100%">
+            <table border="1" cellpadding="50" class="big-table">
                 <tr>
-                    <th colspan="2" style="text-align:center; padding:5px">
+                    <th colspan="2" class="building">
                         Destylarnia sznapsu
                     </th>
                 </tr>
                 <tr>
-                    <td rowspan="2" style="padding:5px; text-align:center; width:40%">
+                    <td rowspan="2" class="building-image">
                         <img src="@Url.Content("~/Images/Buildings/DestylarniaSznapsu.png")" />
                     </td>
-                    <td style="padding:5px; width:60%">
-                        Produkuje <img src="@Url.Content("~/Images/sznaps.png")" style="width: 25px; height: 25px" /> z <img src="@Url.Content("~/Images/ziemniaki.png")" style="width: 25px; height: 25px" /> co 2 minuty<br />
-                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" style="width: 25px; height: 25px" /> 100<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" /><br />
-                        Utrzymanie: 50<img src="@Url.Content("~/Images/farmerzy.png")" style="width: 25px; height: 25px" /> 10<img src="@Url.Content("~/Images/kasa.png")" style="width: 25px; height: 25px" />/min<br />
+                    <td class="building-text">
+                        Produkuje <img src="@Url.Content("~/Images/sznaps.png")" class="image-resource" /> z <img src="@Url.Content("~/Images/ziemniaki.png")" class="image-resource" /> co 2 minuty<br />
+                        Koszt wybudowania: 2<img src="@Url.Content("~/Images/deski.png")" class="image-resource" /> 100<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" /><br />
+                        Utrzymanie: 50<img src="@Url.Content("~/Images/farmerzy.png")" class="image-resource" /> 10<img src="@Url.Content("~/Images/kasa.png")" class="image-resource" />/min<br />
                         Liczba wybudowanych: @Model.Buildings.DestylarniaSznapsu
                     </td>
                 </tr>
                 @if (Model.YourIsland)
                 {
                     <tr>
-                        <td style="padding:5px">
+                        <td class="building-options">
                             @using (Html.BeginForm("Build", "Game", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
