@@ -8,12 +8,21 @@ using System.Web;
 
 namespace NewWorld.Repositories
 {
-    public class GameRopository
+    public class GameRepository
     {
         private ApplicationDbContext db;
-        public GameRopository()
+        private UserGamePropertyRepository userGamePropertyRepository;
+        private IslandRepository islandRepository;
+        public GameRepository()
         {
             db = Context.DbContext;
+            userGamePropertyRepository = Context.userGamePropertyRepository;
+            islandRepository = Context.islandRepository;
+        }
+
+        public Game GetGame(int id)
+        {
+            return db.Games.Find(id);
         }
 
         public bool NameUsed(Game game)
@@ -46,6 +55,34 @@ namespace NewWorld.Repositories
         {
             var gameListIds = userGames.Select(a => a.Id).ToList();
             return db.Games.Where(a => !a.IsBegan).Where(b => !gameListIds.Contains(b.Id)).ToList();
+        }
+
+        public void RemovePlayer(ApplicationUser user,Game game)
+        {
+            game.Players.Remove(user);
+            userGamePropertyRepository.RemoveUserGameProperty(user, game);
+            //jeżeli nie ma więcej graczy to usuń grę
+            if (game.Players.Count == 0)
+            {
+                islandRepository.RemoveAllIslands(game);
+                db.Games.Remove(game);
+            }
+            db.SaveChanges();
+        }
+        //dodanie gracza do gry, jeżeli gra jest pełna to wystartuj
+        public void AddUserToGame(ApplicationUser user, Game game)
+        {
+            game.Players.Add(user);
+            UserGameProperty userGameProperty =  userGamePropertyRepository.CreateUserGameProperty(user, game.NumberOfPlayers() - 1);
+            game.UserGameProperties.Add(userGameProperty);
+            if (game.NumberOfPlayers() == game.MaxPlayers)
+            {
+                List<UserGameProperty> properties = userGamePropertyRepository.GetAllUserGameProperties(game);
+                List<Island> islands = game.InitializeGame(properties);
+                islandRepository.AddIslands(islands);
+                
+            }
+            db.SaveChanges();
         }
     }
 }

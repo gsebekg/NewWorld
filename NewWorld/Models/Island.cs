@@ -37,6 +37,12 @@ namespace NewWorld.Models
         {
             return Island.Distance(islandA.X, islandB.X, islandA.Y, islandB.Y);
         }
+
+        public void LeaveIsland()
+        {
+            Resources.ZeroResources();
+            Property = null;
+        }
     }
 
 }

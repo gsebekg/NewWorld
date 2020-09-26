@@ -14,7 +14,9 @@ namespace NewWorld
             ConfigureAuth(app);
             Context.DbContext = new ApplicationDbContext();
             Context.userRepository = new UserRepository();
-            Context.gameRopository = new GameRopository();
+            Context.userGamePropertyRepository = new UserGamePropertyRepository();
+            Context.islandRepository = new IslandRepository();
+            Context.gameRepository = new GameRepository();
         }
     }
 }

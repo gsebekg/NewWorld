@@ -13,12 +13,16 @@ namespace NewWorld.Controllers
 {
     public class HomeController : Controller
     {
-        GameRopository gameRopository;
+        GameRepository gameRepository;
         UserRepository userRepository;
+        IslandRepository islandRepository;
+        UserGamePropertyRepository userGamePropertyRepository;
         public HomeController()
         {
-            gameRopository = Context.gameRopository;
+            gameRepository = Context.gameRepository;
             userRepository = Context.userRepository;
+            islandRepository = Context.islandRepository;
+            userGamePropertyRepository = Context.userGamePropertyRepository;
         }
 
         //strona główna
@@ -53,45 +57,35 @@ namespace NewWorld.Controllers
                 else
                 {
                     //sprawdzanie czy dana nazwa juz nie istnieje
-                    viewModel.NameUsed = gameRopository.NameUsed(game);
+                    viewModel.NameUsed = gameRepository.NameUsed(game);
                     if (!viewModel.NameUsed.GetValueOrDefault())
-                        gameRopository.CreateGame(game, user);
+                        gameRepository.CreateGame(game, user);
                 }
             }
             GetHomeViewModel(viewModel);
             return View(viewModel);
         }
-/*
+
         //wycofanie się z gry
         [Authorize]
         public ActionResult Delete(int id)
         {
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            Game game = db.Games.Find(id);
-            UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Player.Id == user.Id).Where(b => b.Game.Id == game.Id).FirstOrDefault();
+            ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+            Game game = gameRepository.GetGame(id);
             if (game.IsBegan)
                 return RedirectToAction("GameList");
-            game.Players.Remove(user);
-            db.UserGameProperties.Remove(userGameProperty);
-            //jeżeli nie ma więcej graczy to usuń grę
-            if (game.Players.Count == 0)
-            {
-                List<Island> islands = db.Islands.Where(a => a.Game.Id == game.Id).ToList();
-                db.Islands.RemoveRange(islands).ToList();
-                db.Games.Remove(game);
-            }
-            db.SaveChanges();
+            gameRepository.RemovePlayer(user, game);
             return RedirectToAction("GameList");
         }
-
+        
         // dołącz do istniejącej gry
         [Authorize]
         public ActionResult Join(int id)
         {
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            Game game = db.Games.Find(id);
+            ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+            Game game = gameRepository.GetGame(id);
             //sprawdzanie czy gracz nie ma juz zaczętych maksymalnej liczby gier
-            if (user.UserGameProperties.Where(a => a.Active).Count() >= 3)
+            if (userRepository.HaveMaxGames(user))
                 return RedirectToAction("GameList", new { id = true });
             //jeżeli gra ma hasło wyswietl strone do wprowadzania hasła
             if (game.HavePassword())
@@ -101,8 +95,7 @@ namespace NewWorld.Controllers
             }
             if (game.Players.Contains(user) || game.IsBegan)
                 return RedirectToAction("GameList");
-            AddUserToGame(user, game);
-            db.SaveChanges();
+            gameRepository.AddUserToGame(user, game);
             return RedirectToAction("GameList");
         }
 
@@ -112,10 +105,10 @@ namespace NewWorld.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Join([Bind(Include = "Id,Password")] JoinViewModel viewModel)
         {
-            Game game = db.Games.Find(viewModel.Id);
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+            Game game = gameRepository.GetGame(viewModel.Id);
             //sprawdzanie czy gracz nie ma juz zaczętych maksymalnej liczby gier
-            if (user.UserGameProperties.Where(a => a.Active).Count() >= 3)
+            if (userRepository.HaveMaxGames(user))
                 return RedirectToAction("GameList", new { id = true });
             if (ModelState.IsValid)
             {
@@ -123,8 +116,7 @@ namespace NewWorld.Controllers
                     return View(new JoinViewModel { Id = viewModel.Id, Name = game.Name, WrongPassword = true });
                 if (game.Players.Contains(user) || game.IsBegan)
                     return RedirectToAction("GameList");
-                AddUserToGame(user, game);
-                db.SaveChanges();
+                gameRepository.AddUserToGame(user, game);
                 return RedirectToAction("GameList");
             }
             return View(new JoinViewModel { Id = viewModel.Id, Name = game.Name, WrongPassword = true });
@@ -134,7 +126,7 @@ namespace NewWorld.Controllers
         [Authorize]
         public ActionResult GiveUp(int id)
         {
-            Game game = db.Games.Find(id);
+            Game game = gameRepository.GetGame(id);
             return View(game);
         }
 
@@ -142,137 +134,22 @@ namespace NewWorld.Controllers
         [Authorize]
         public ActionResult GiveUpConfirmed(int id)
         {
-            Game game = db.Games.Find(id);
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Game.Id == game.Id).Where(b => b.Player.Id == user.Id).FirstOrDefault();
-            List<Island> islands = db.Islands.Where(a => a.Property.Id == userGameProperty.Id).ToList();
+            ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+            Game game = gameRepository.GetGame(id);
+            List<Island> islands = islandRepository.GetIslands(game, user);
             foreach (Island island in islands)
-            {
-                island.Resources.ZeroResources();
-                island.Property = null;
-            }
-
-            userGameProperty.Active = false;
-            db.SaveChanges();
+                island.LeaveIsland();
+            userGamePropertyRepository.Deactive(game, user);
             
             return RedirectToAction("GameList");
         }
 
-        */
         //helpers
         private void GetHomeViewModel(HomeViewModels viewModel)
         {
             ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
-            viewModel.YourGames = gameRopository.GetUserGames(user);
-            viewModel.OpenGames = gameRopository.GetOpenGames(viewModel.YourGames);
+            viewModel.YourGames = gameRepository.GetUserGames(user);
+            viewModel.OpenGames = gameRepository.GetOpenGames(viewModel.YourGames);
         }
-        /*
-        //dodanie gracza do gry, jeżeli gra jest pełna to wystartuj
-        private void AddUserToGame(ApplicationUser user, Game game)
-        {
-            game.Players.Add(user);
-            UserGameProperty userGameProperty = new UserGameProperty { Active = true, Color = (Color)(game.NumberOfPlayers() - 1), Player = user, Coins=10000 };
-            game.UserGameProperties.Add(userGameProperty);
-            if (game.NumberOfPlayers() == game.MaxPlayers)
-            {
-                game.IsBegan = true;
-                game.Update= DateTime.Now;
-                db.SaveChanges();
-                Random rand = new Random();
-                List<UserGameProperty> properties = db.UserGameProperties.Where(a => a.Game.Id == game.Id).ToList();
-                List<Island> islands = new List<Island>();
-                int x, y;
-                int wielkoscMapy = game.MaxPlayers * 5;
-                bool positionOk;
-                //losowanie wysp graczy
-                for (int i=0;i<game.MaxPlayers;i++)
-                {
-                    //losujemy współrzędne tak by wyspa nie znajdowała sie za blisko innej
-                    do
-                    {
-                        positionOk = true;
-                        x = rand.Next(0, wielkoscMapy);
-                        y = rand.Next(0, wielkoscMapy);
-                        foreach (Island item in islands)
-                        {
-                            if (Island.Distance(x, item.X, y, item.Y) < 2)
-                            {
-                                positionOk = false;
-                                break;
-                            }
-                        }
-                    }
-                    while (!positionOk);
-                    Resources resources = new Resources();
-                    resources.InitialResources();
-                    Island island = new Island
-                    {
-                        Name = "Wyspa " + properties[i].Player.UserName,
-                        Place = 500,
-                        X = x,
-                        Y = y,
-                        Resources = resources,
-                        Ziemniaki = true,
-                        Chmiel = true,
-                        Zboze = false,
-                        Papryka = false,
-                        Glinianka = 2,
-                        Zelazo = 2,
-                        Property = properties[i],
-                        Game = game
-                    };
-                    island.Buildings = new Buildings();
-                    island.Buildings.FarmersSatisfaction = new Resources();
-                    islands.Add(island);
-                }
-                //losowanie pustych wysp
-                for(int i=0; i<game.MaxPlayers*4;i++)
-                {
-                    do
-                    {
-                        positionOk = true;
-                        x = rand.Next(0, wielkoscMapy);
-                        y = rand.Next(0, wielkoscMapy);
-                        foreach (Island item in islands)
-                        {
-                            if (Island.Distance(x, item.X, y, item.Y) < 2)
-                            {
-                                positionOk = false;
-                                break;
-                            }
-                        }
-                    }
-                    while (!positionOk);
-                    Resources resources = new Resources();
-                    resources.ZeroResources();
-                    int glinianka = rand.Next(-1, 4);
-                    glinianka = (glinianka == -1) ? 0 : glinianka;
-                    int zelazo = rand.Next(-1, 4);
-                    zelazo = (zelazo == -1) ? 0 : zelazo;
-                    Island island = new Island
-                    {
-                        Name = "Wyspa " + (i+1),
-                        Place = rand.Next(300,601),
-                        X = x,
-                        Y = y,
-                        Resources = resources,
-                        Ziemniaki = rand.Next(1,9)<=3,
-                        Chmiel = rand.Next(1, 9) <= 3,
-                        Zboze = rand.Next(1, 9) <= 5,
-                        Papryka = rand.Next(1, 9) <= 5,
-                        Glinianka = glinianka,
-                        Zelazo = zelazo,
-                        Property = null,
-                        Game=game
-                    };
-                    island.Buildings = new Buildings();
-                    islands.Add(island);
-                }
-                db.Islands.AddRange(islands);
-                db.SaveChanges();
-            }
-
-        }
-        */
     }
 }

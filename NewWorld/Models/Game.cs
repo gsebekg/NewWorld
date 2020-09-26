@@ -36,5 +36,101 @@ namespace NewWorld.Models
         {
             return !Password.IsNullOrWhiteSpace();
         }
+
+        public List<Island> InitializeGame(List<UserGameProperty> properties)
+        {
+            IsBegan = true;
+            Update = DateTime.Now;
+            Random rand = new Random();
+            List<Island> islands = new List<Island>();
+            int x, y;
+            int wielkoscMapy = MaxPlayers * 5;
+            bool positionOk;
+            //losowanie wysp graczy
+            for (int i = 0; i < MaxPlayers; i++)
+            {
+                //losujemy współrzędne tak by wyspa nie znajdowała sie za blisko innej
+                do
+                {
+                    positionOk = true;
+                    x = rand.Next(0, wielkoscMapy);
+                    y = rand.Next(0, wielkoscMapy);
+                    foreach (Island item in islands)
+                    {
+                        if (Island.Distance(x, item.X, y, item.Y) < 2)
+                        {
+                            positionOk = false;
+                            break;
+                        }
+                    }
+                }
+                while (!positionOk);
+                Resources resources = new Resources();
+                resources.InitialResources();
+                Island island = new Island
+                {
+                    Name = "Wyspa " + properties[i].Player.UserName,
+                    Place = 500,
+                    X = x,
+                    Y = y,
+                    Resources = resources,
+                    Ziemniaki = true,
+                    Chmiel = true,
+                    Zboze = false,
+                    Papryka = false,
+                    Glinianka = 2,
+                    Zelazo = 2,
+                    Property = properties[i],
+                    Game = this
+                };
+                island.Buildings = new Buildings();
+                island.Buildings.FarmersSatisfaction = new Resources();
+                islands.Add(island);
+            }
+            //losowanie pustych wysp
+            for (int i = 0; i < MaxPlayers * 4; i++)
+            {
+                do
+                {
+                    positionOk = true;
+                    x = rand.Next(0, wielkoscMapy);
+                    y = rand.Next(0, wielkoscMapy);
+                    foreach (Island item in islands)
+                    {
+                        if (Island.Distance(x, item.X, y, item.Y) < 2)
+                        {
+                            positionOk = false;
+                            break;
+                        }
+                    }
+                }
+                while (!positionOk);
+                Resources resources = new Resources();
+                resources.ZeroResources();
+                int glinianka = rand.Next(-1, 4);
+                glinianka = (glinianka == -1) ? 0 : glinianka;
+                int zelazo = rand.Next(-1, 4);
+                zelazo = (zelazo == -1) ? 0 : zelazo;
+                Island island = new Island
+                {
+                    Name = "Wyspa " + (i + 1),
+                    Place = rand.Next(300, 601),
+                    X = x,
+                    Y = y,
+                    Resources = resources,
+                    Ziemniaki = rand.Next(1, 9) <= 3,
+                    Chmiel = rand.Next(1, 9) <= 3,
+                    Zboze = rand.Next(1, 9) <= 5,
+                    Papryka = rand.Next(1, 9) <= 5,
+                    Glinianka = glinianka,
+                    Zelazo = zelazo,
+                    Property = null,
+                    Game = this
+                };
+                island.Buildings = new Buildings();
+                islands.Add(island);
+            }
+            return islands;
+        }
     }
 }

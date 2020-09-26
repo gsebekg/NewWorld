@@ -47,7 +47,9 @@ namespace NewWorld.Models
     public static class Context
     {
         public static ApplicationDbContext DbContext;
-        public static GameRopository gameRopository;
+        public static GameRepository gameRepository;
         public static UserRepository userRepository;
+        public static UserGamePropertyRepository userGamePropertyRepository;
+        public static IslandRepository islandRepository;
     }
 }
