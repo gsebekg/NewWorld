@@ -1,4 +1,5 @@
 ﻿using Microsoft.Ajax.Utilities;
+using NewWorld.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -131,6 +132,24 @@ namespace NewWorld.Models
                 islands.Add(island);
             }
             return islands;
+        }
+
+        //obliczanie ile minut upłyneło od ostatniego update
+        public int CalculateNumberOfCycles()
+        {
+            GameRepository gameRepository = Context.gameRepository;
+            TimeSpan timeSinceLastUpdate = DateTime.Now.Subtract(Update);
+            int numberOfCycles = (int)timeSinceLastUpdate.TotalMinutes;
+            Update = Update.AddMinutes(numberOfCycles);
+            gameRepository.Save();
+            return numberOfCycles;
+        }
+
+        public bool PlayerIsActive(ApplicationUser user)
+        {
+            var ids = Players.Select(a => a.Id).ToList();
+            //sprawdzanie czy gracz należy do tej gry i czy się nie wycofał
+            return (ids.Contains(user.Id) && UserGameProperties.Where(a => a.Player.Id == user.Id).SingleOrDefault().Active == true);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Antlr.Runtime;
 using Microsoft.AspNet.Identity;
 using NewWorld.Models;
+using NewWorld.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,31 +12,36 @@ namespace NewWorld.Controllers
 {
     public class GameController : Controller
     {
-        private ApplicationDbContext db;
-
+        readonly GameRepository gameRepository;
+        readonly UserRepository userRepository;
+        readonly IslandRepository islandRepository;
+        readonly UserGamePropertyRepository userGamePropertyRepository;
         public GameController()
         {
-            db = new ApplicationDbContext();
+            gameRepository = Context.gameRepository;
+            userRepository = Context.userRepository;
+            islandRepository = Context.islandRepository;
+            userGamePropertyRepository = Context.userGamePropertyRepository;
         }
 
         //wyśiwetlanie mapy gry
         [Authorize]
         public ActionResult Map(int id)
         {
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            Game game = db.Games.Find(id);
+            ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+            Game game = gameRepository.GetGame(id);
             if ((!game.IsBegan || game == null))
                 return RedirectToAction("GameList", "Home");
-            UserGameProperty userGameProperty = db.UserGameProperties.Where(a => a.Game.Id == game.Id).Where(b => b.Player.Id == user.Id).SingleOrDefault();
+            UserGameProperty userGameProperty = userGamePropertyRepository.GetUserGameProperty(user, game);
             if (!userGameProperty.Active || userGameProperty == null)
                 return RedirectToAction("GameList", "Home");
-            CyclicProduct.CalculateGame(id,db);
+            CyclicProduct.CalculateGame(id);
             MapViewModel viewModel = new MapViewModel
             {
                 Game = game,
                 Property = userGameProperty,
-                Islands = db.Islands.Where(a => a.Game.Id == game.Id).OrderBy(b => b.Y).ThenBy(c => c.X).ToList(),
-                AllPlayers = db.UserGameProperties.Where(a => a.Game.Id == game.Id).ToList()
+                Islands = islandRepository.GetIslandsToMap(game),
+                AllPlayers = userGamePropertyRepository.GetAllUserGameProperties(game)
             };
             return View(viewModel);
         }
@@ -44,13 +50,11 @@ namespace NewWorld.Controllers
         [Authorize]
         public ActionResult Island(int id)
         {
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            Island island = db.Islands.Find(id);
-            var ids = island.Game.Players.Select(a => a.Id).ToList();
-            //sprawdzanie czy gracz należy do tej gry i czy się nie wycofał
-            if (!ids.Contains(user.Id) || island.Game.UserGameProperties.Where(a => a.Player.Id == user.Id).SingleOrDefault().Active == false)
+            ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+            Island island = islandRepository.GetIsland(id);
+            if (!island.Game.PlayerIsActive(user))
                 return RedirectToAction("GameList", "Home");
-            CyclicProduct.CalculateGame(island.Game.Id,db);
+            CyclicProduct.CalculateGame(island.Game.Id);
             IslandViewModel viewModel = new IslandViewModel();
             viewModel.EmptyIsland = island.Property == null;
             if (!viewModel.EmptyIsland)
@@ -61,17 +65,12 @@ namespace NewWorld.Controllers
             viewModel.Island = island;
             if (viewModel.YourIsland)
                 viewModel.Resources = island.Resources;
-            viewModel.Coins = db.UserGameProperties.Where(a => a.Player.Id == user.Id).Where(b => b.Game.Id == island.Game.Id).SingleOrDefault().Coins;
+            viewModel.Coins = userGamePropertyRepository.GetUserGameProperty(user,island.Game).Coins;
             viewModel.Buildings = island.Buildings;
             BuildingList buildings = new BuildingList(island);
-            int sum = 0;
             if (viewModel.YourIsland)
             {
-                viewModel.MaxBuildings = new List<int>();
-                foreach (Building building in buildings.buildings)
-                    sum += building.Number;
-                foreach (Building building in buildings.buildings)
-                    viewModel.MaxBuildings.Add(building.HowManyCanYouBuild(island.Resources, viewModel.Coins, island.Place-sum));
+                viewModel.CalculateMaxBuildings(island, buildings.buildings);
                 viewModel.ResourceImages = Resources.ResourceImage();
                 viewModel.ResourcesList = viewModel.Resources.BuildList();
             }
@@ -86,24 +85,13 @@ namespace NewWorld.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-                Island island = db.Islands.Find(viewModel.Id);
+                ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+                Island island = islandRepository.GetIsland(viewModel.Id);
                 if (island != null && island.Property.Player.Id == user.Id)
                 {
-                    CyclicProduct.CalculateGame(island.Game.Id,db);  // ponowne odświerzanie danych by sprawdzić czy dalej stać użytkownika
-                    BuildingList buildings = new BuildingList(island);
-                    Building building = buildings.buildings[viewModel.Name];
-                    long coins = island.Property.Coins;
-                    //sprawdzanie ile jest zajętego miejsca
-                    int sum = 0;
-                    foreach (Building building1 in buildings.buildings)
-                        sum += building1.Number;
-                    bool IsProductionBuilding = building.Build(viewModel.Number, island.Resources, ref coins, island.Place - sum) && building is ProductionBuilding;
-                    buildings.ListToBuildings(island);
-                    if (IsProductionBuilding)
-                        island.Buildings.NeededFarmers+= (building as ProductionBuilding).NeededFarmers * viewModel.Number;
-                    island.Property.Coins = coins;
-                    db.SaveChanges();
+                    CyclicProduct.CalculateGame(island.Game.Id);  // ponowne odświerzanie danych by sprawdzić czy dalej stać użytkownika
+                    island.Build(viewModel.Name, viewModel.Number);
+                    gameRepository.Save();
                 }
             }
             return RedirectToAction("Island", new { id = viewModel.Id });
@@ -117,18 +105,13 @@ namespace NewWorld.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-                Island island = db.Islands.Find(viewModel.Id);
+                ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+                Island island = islandRepository.GetIsland(viewModel.Id);
                 if (island != null && island.Property.Player.Id == user.Id)
                 {
-                    CyclicProduct.CalculateGame(island.Game.Id,db);
-                    BuildingList buildings = new BuildingList(island);
-                    Building building = buildings.buildings[viewModel.Name];
-                    long coins = island.Property.Coins;
-                    building.Destroy(viewModel.Number, island.Resources, ref coins);
-                    buildings.ListToBuildings(island);
-                    island.Property.Coins = coins;
-                    db.SaveChanges();
+                    CyclicProduct.CalculateGame(island.Game.Id);
+                    island.Destroy(viewModel.Name, viewModel.Number);
+                    gameRepository.Save();
                 }
             }
             return RedirectToAction("Island", new { id = viewModel.Id });
@@ -138,7 +121,7 @@ namespace NewWorld.Controllers
         [Authorize]
         public ActionResult ChangeName(int id)
         {
-            Island island = db.Islands.Find(id);
+            Island island = islandRepository.GetIsland(id);
             if (island.Property.Player.Id != User.Identity.GetUserId())
                 return RedirectToAction("Map");
             ChangeNameViewModel viewModel = new ChangeNameViewModel { NameUsed = false, Id = id };
@@ -154,18 +137,16 @@ namespace NewWorld.Controllers
             if (ModelState.IsValid)
             {
                 viewModel.NewName = viewModel.NewName.Trim();
-                ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-                Island island = db.Islands.Find(viewModel.Id);
+                ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
+                Island island = islandRepository.GetIsland(viewModel.Id);
                 if (island != null && island.Property.Player.Id == user.Id)
                 {
-                    Game game = island.Game;
-                    if (db.Islands.Where(a => a.Game.Id == game.Id).Select(b => b.Name).Contains(viewModel.NewName))
+                    if (island.ChangeName(viewModel.NewName))
                     {
                         viewModel.NameUsed = true;
                         return View(viewModel);
                     }
-                    island.Name = viewModel.NewName;
-                    db.SaveChanges();
+                    gameRepository.Save();
                     return RedirectToAction("Island", new { id = viewModel.Id });
                 }
             }

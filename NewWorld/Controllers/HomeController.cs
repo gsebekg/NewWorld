@@ -13,10 +13,10 @@ namespace NewWorld.Controllers
 {
     public class HomeController : Controller
     {
-        GameRepository gameRepository;
-        UserRepository userRepository;
-        IslandRepository islandRepository;
-        UserGamePropertyRepository userGamePropertyRepository;
+        readonly GameRepository gameRepository;
+        readonly UserRepository userRepository;
+        readonly IslandRepository islandRepository;
+        readonly UserGamePropertyRepository userGamePropertyRepository;
         public HomeController()
         {
             gameRepository = Context.gameRepository;
@@ -136,7 +136,7 @@ namespace NewWorld.Controllers
         {
             ApplicationUser user = userRepository.GetUser(User.Identity.GetUserId());
             Game game = gameRepository.GetGame(id);
-            List<Island> islands = islandRepository.GetIslands(game, user);
+            List<Island> islands = islandRepository.GetAllIslands(game, user);
             foreach (Island island in islands)
                 island.LeaveIsland();
             userGamePropertyRepository.Deactive(game, user);

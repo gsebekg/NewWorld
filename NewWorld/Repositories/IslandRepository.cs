@@ -8,8 +8,8 @@ namespace NewWorld.Repositories
 {
     public class IslandRepository
     {
-        private ApplicationDbContext db;
-        private UserGamePropertyRepository userGamePropertyRepository;
+        private readonly ApplicationDbContext db;
+        private readonly UserGamePropertyRepository userGamePropertyRepository;
         public IslandRepository()
         {
             db = Context.DbContext;
@@ -22,10 +22,25 @@ namespace NewWorld.Repositories
             db.Islands.RemoveRange(islands).ToList();
         }
 
-        public List<Island> GetIslands(Game game, ApplicationUser user)
+        public Island GetIsland(int id)
+        {
+            return db.Islands.Find(id);
+        }
+
+        public List<Island> GetAllIslands(Game game, ApplicationUser user)
         {
             UserGameProperty userGameProperty = userGamePropertyRepository.GetUserGameProperty(user, game);
             return db.Islands.Where(a => a.Property.Id == userGameProperty.Id).ToList();
+        }
+
+        public List<Island> GetAllIslands(Game game)
+        {
+            return db.Islands.Where(a => a.Game.Id == game.Id).ToList();
+        }
+
+        public List<Island> GetIslandsToMap(Game game)
+        {
+            return db.Islands.Where(a => a.Game.Id == game.Id).OrderBy(b => b.Y).ThenBy(c => c.X).ToList();
         }
 
         public void AddIslands(List<Island> islands)

@@ -8,7 +8,7 @@ namespace NewWorld.Repositories
 {
     public class UserRepository
     {
-        private ApplicationDbContext db;
+        private readonly ApplicationDbContext db;
         public UserRepository()
         {
             db = Context.DbContext;

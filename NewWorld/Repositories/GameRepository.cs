@@ -10,9 +10,9 @@ namespace NewWorld.Repositories
 {
     public class GameRepository
     {
-        private ApplicationDbContext db;
-        private UserGamePropertyRepository userGamePropertyRepository;
-        private IslandRepository islandRepository;
+        private readonly ApplicationDbContext db;
+        private readonly UserGamePropertyRepository userGamePropertyRepository;
+        private readonly IslandRepository islandRepository;
         public GameRepository()
         {
             db = Context.DbContext;
@@ -75,6 +75,7 @@ namespace NewWorld.Repositories
             game.Players.Add(user);
             UserGameProperty userGameProperty =  userGamePropertyRepository.CreateUserGameProperty(user, game.NumberOfPlayers() - 1);
             game.UserGameProperties.Add(userGameProperty);
+            db.SaveChanges();
             if (game.NumberOfPlayers() == game.MaxPlayers)
             {
                 List<UserGameProperty> properties = userGamePropertyRepository.GetAllUserGameProperties(game);
@@ -82,6 +83,11 @@ namespace NewWorld.Repositories
                 islandRepository.AddIslands(islands);
                 
             }
+            db.SaveChanges();
+        }
+
+        public void Save()
+        {
             db.SaveChanges();
         }
     }

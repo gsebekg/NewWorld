@@ -9,7 +9,7 @@ namespace NewWorld.Repositories
 {
     public class UserGamePropertyRepository
     {
-        private ApplicationDbContext db;
+        private readonly ApplicationDbContext db;
         public UserGamePropertyRepository()
         {
             db = Context.DbContext;
@@ -48,5 +48,6 @@ namespace NewWorld.Repositories
             userGameProperty.Active = false;
             db.SaveChanges();
         }
+
     }
 }

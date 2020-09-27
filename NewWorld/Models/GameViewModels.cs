@@ -26,6 +26,17 @@ namespace NewWorld.Models
         public long Coins { get; set; }
         public List<string> ResourceImages { get; set; }
         public List<double> ResourcesList { get; set; }
+
+
+        public void CalculateMaxBuildings(Island island, List<Building> buildings)
+        {
+            MaxBuildings = new List<int>();
+            int sum = 0;
+            foreach (Building building in buildings)
+                sum += building.Number;
+            foreach (Building building in buildings)
+                MaxBuildings.Add(building.HowManyCanYouBuild(island.Resources, Coins, island.Place - sum));
+        }
     }
 
     public class BuildDestroyViewModel
